@@ -19,7 +19,12 @@ app.get('/', function(request, response){
 app.get('/home', function(request, response){
   response.render("home.hbs")
 })
-
+app.get('/blog', function(request, response){
+  response.render("blog.hbs")
+})
+app.get('/guestbook', function(request, response){
+  response.render("guestbook.hbs")
+})
 app.get('/about', function(request, response){
   response.render("about.hbs")
 })
