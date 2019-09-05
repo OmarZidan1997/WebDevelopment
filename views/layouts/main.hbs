@@ -1,11 +1,48 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Hello</title>
-  </head>
-  <body>
-    <h1>My Website</h1>
-    {{{body}}}
-  </body>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+  <title>Hello</title>
+</head>
+
+<body class="bg-success">
+
+  <header>
+    <h1 class="text-center bg-primary py-2 m-0">My Website</h1>
+  </header>
+
+  <div class="container">
+    <div class="columns">
+      <div class="column col-2"></div>
+      <nav class="column col-1 bg-dark">
+        <ul class="nav">
+          <li class="nav-item">
+            <a href="/home">Home</a>
+          </li>
+          <li class="nav-item">
+            <a href="/about">About</a>
+          </li>
+          <li class="nav-item">
+            <a href="/contact">Contact</a>
+          </li>
+        </ul>
+      </nav>
+
+      <main class="column col-7 bg-dark">
+        {{{body}}}
+      </main>
+      <div class="column col-2"></div>
+    </div>
+  </div>
+
+  <footer class="text-center text-secondary bg-warning ">
+    FOOOOOOOOOTEEEEEEEEERRRRRRRRRRRRR
+  </footer>
+
+</body>
+
 </html>
