@@ -9,16 +9,29 @@
   <title>Hello</title>
 </head>
 
-<body class="bg-success">
+<body class="bg-primary">
 
   <header>
-    <h1 class="text-center bg-primary py-2 m-0">My Website</h1>
+    <h1 class="text-center py-2 m-0">My Website</h1>
   </header>
 
-  <div class="container">
+  <nav class="navbar text-right bg-error">
+    <section class="navbar-section">
+      <a href="/home" class="btn btn-link">Home</a>
+      <a href="/blog" class="btn btn-link">Blog</a>
+      <a href="/guestbook" class="btn btn-link">GuestBook</a>
+      <a href="/about" class="btn btn-link">About</a>
+      <a href="/contact" class="btn btn-link">Contact</a>
+    </section>
+    <section class="navbar">
+      <a href="ww">wwww</a>
+    </section>
+  </nav>
+  <!--
+    <div class="container">
     <div class="columns">
       <div class="column col-2"></div>
-      <nav class="column col-1 bg-dark">
+      <nav class="column col-1 bg-error">
         <ul class="nav">
           <li class="nav-item">
             <a href="/home">Home</a>
@@ -37,15 +50,16 @@
           </li>
         </ul>
       </nav>
+      -->
 
-      <main class="column col-7 bg-dark">
-        {{{body}}}
-      </main>
-      <div class="column col-2"></div>
-    </div>
+  <main class="bg-dark">
+    {{{body}}}
+  </main>
+  <div class="column col-2"></div>
+  </div>
   </div>
 
-  <footer class="text-center text-secondary bg-warning ">
+  <footer class="text-center text-secondary bg-warning m-0 ">
     FOOOOOOOOOTEEEEEEEEERRRRRRRRRRRRR
   </footer>
 
