@@ -8,6 +8,8 @@ app.engine("hbs", expressHandlebars({
   defaultLayout: 'main.hbs'
 }))
 
+app.use(express.static('public')); 
+
 app.get('/', function(request, response){
   const model = {
     humans: dummyData.humans,
@@ -17,19 +19,19 @@ app.get('/', function(request, response){
 })
 
 app.get('/home', function(request, response){
-  response.render("home.hbs")
+  response.render("home.hbs",{ title:"Home Page" })
 })
 app.get('/blog', function(request, response){
-  response.render("blog.hbs")
+  response.render("blog.hbs",{ title:"Blog Page" })
 })
 app.get('/guestbook', function(request, response){
-  response.render("guestbook.hbs")
+  response.render("guestbook.hbs",{ title:"GuestBook Page" })
 })
 app.get('/about', function(request, response){
-  response.render("about.hbs")
+  response.render("about.hbs",{ title:"About Page" })
 })
 app.get('/contact', function(request, response){
-  response.render("contact.hbs")
+  response.render("contact.hbs",{ title:"Contact Page" })
 })
 
 app.listen(8080)
