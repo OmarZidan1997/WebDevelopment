@@ -1,0 +1,27 @@
+body,html{
+    background-color: #212227;
+    height: 100%;
+}
+#header-main{
+    color: #887880;
+}
+
+#content{
+    color: white;
+    background-color: #546A76;
+    min-height: 88%;
+}
+.navbar{
+    background-color: #8693AB;
+}
+
+.navbar-center a{
+    color: white !important;
+}
+
+footer{
+    background-color: #887880;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}

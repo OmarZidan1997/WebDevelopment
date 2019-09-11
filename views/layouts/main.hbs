@@ -6,29 +6,30 @@
   <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
   <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
   <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="/css/layout.css">
   <title> {{title}} </title>
 </head>
 
 <body>
 
-  <header>
+  <header id="header-main">
     <h1 class="text-center py-2 m-0">My Website</h1>
   </header>
-  <div class="columns col-gapless" id="layout">
-    <nav class="navbar text-right column col-12">
-      <section class="navbar-section"></section>
-      <section class="navbar-center">
-        <a href="/home" class="btn btn-link">Home</a>
-        <a href="/blog" class="btn btn-link">Blog</a>
-        <a href="/guestbook" class="btn btn-link">GuestBook</a>
-        <a href="/about" class="btn btn-link">About</a>
-        <a href="/contact" class="btn btn-link">Contact</a>
-      </section>
-      <section class="navbar-section"></section>
-    </nav>
 
-    <main class="bg-dark column col-12">
+  <nav class="navbar text-right column col-12">
+    <section class="navbar-section"></section>
+    <section class="navbar-center">
+      <a href="/home" class="btn btn-link">Home</a>
+      <a href="/blog" class="btn btn-link">Blog</a>
+      <a href="/guestbook" class="btn btn-link">GuestBook</a>
+      <a href="/about" class="btn btn-link">About</a>
+      <a href="/contact" class="btn btn-link">Contact</a>
+    </section>
+    <section class="navbar-section"></section>
+  </nav>
+  <div class="columns col-gapless" id="content">
+
+    <main class="column col-12">
       {{{body}}}
     </main>
   </div>
@@ -62,7 +63,7 @@
   </div>
       -->
 
-  <footer class="text-center text-secondary bg-warning m-0 ">
+  <footer class="text-center text-secondary ">
     FOOOOOOOOOTEEEEEEEEERRRRRRRRRRRRR
   </footer>
 
