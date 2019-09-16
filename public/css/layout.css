@@ -1,6 +1,7 @@
 body,html{
     background-color: #212227;
     height: 100%;
+    width: 100%;
 }
 #header-main{
     color: #887880;
@@ -24,4 +25,12 @@ footer{
     position: fixed;
     bottom: 0;
     width: 100%;
+}
+.off-canvas .off-canvas-sidebar{
+    background-color:  #8693AB !important;
+}
+#sidebar-left a{
+    color: white;
+    margin: 10px;
+    display: block;
 }
