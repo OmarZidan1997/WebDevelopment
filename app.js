@@ -10,46 +10,50 @@ app.engine("hbs", expressHandlebars({
 }))
 
 app.use(bodyParser.urlencoded({
-	extended: false
+  extended: false
 }))
 
 
-app.use(express.static('public')); 
+app.use(express.static('public'));
 
-app.get('/', function(request, response){
+app.get('/', function (request, response) {
   const model = {
     humans: dummyData.humans,
-    pets : dummyData.pets
+    pets: dummyData.pets
   }
   response.render("show-all-humans.hbs", model)
 })
 
 
 
-app.get('/home', function(request, response){
-  response.render("home.hbs",{ title:"Home Page" })
+app.get('/home', function (request, response) {
+  response.render("home.hbs", { title: "Home Page" })
 })
 
 
 
 // blog section //
-app.get('/blog', function(request, response){
+app.get('/blog', function (request, response) {
   const model = {
     blog_posts: dummyData.blog_posts
   }
-  response.render("blog.hbs",model)
+  response.render("blog.hbs", model)
 })
 
 
 
-app.get('/create-blog-post', function(request, response){
-  response.render("create-blog-post.hbs")
+app.get('/create-blog-post', function (request, response) {
+  const model = {
+    validationErrors: []
+  }
+  response.render("create-blog-post.hbs", model)
 })
 
 
 
-app.get("/blog/:id", function(request, response){
-  const id = request.params.id
+app.get("/blog/:id", function (request, response) {
+
+  const id = parseInt(request.params.id) //converts the id from string to int
 
   const blog_post = dummyData.blog_posts.find(b => b.id == id)
 
@@ -57,46 +61,77 @@ app.get("/blog/:id", function(request, response){
     blog_post
   }
 
-  response.render("blog-post.hbs",model)
+  response.render("blog-post.hbs", model)
 })
 
 
 
-app.post("/create-blog-post",function(request,response){
+app.post("/create-blog-post", function (request, response) {
+
   const title = request.body.title
   const content = request.body.content
 
-  const blog_post_entry = {
-    id: dummyData.blog_posts.length + 1,
-    title,
-    content
+  const validationErrors = []
+
+  if (title == "") {
+    validationErrors.push("Must enter title")
   }
 
-  dummyData.blog_posts.push(blog_post_entry)
+  if(title.length <= 10){
+    validationErrors.push("Please enter more than 10 letters ")
+  }
+  if (content == "") {
+    validationErrors.push("Must Enter content")
+  }
 
-  response.redirect("/blog/"+blog_post_entry.id)
-  
+  if(content.length <= 50 ){
+    validationErrors.push("Must enter content with more than 50 letters")
+  }
+
+  if (validationErrors.length == 0) {
+
+    const blog_post_entry = {
+      id: dummyData.blog_posts.length + 1,
+      title,
+      content
+    }
+
+    dummyData.blog_posts.push(blog_post_entry)
+
+    response.redirect("/blog/" + blog_post_entry.id)
+
+  }
+  else{
+
+    const model = {
+      validationErrors
+    }
+
+    response.render("create-blog-post.hbs",model)
+
+  }
+
 })
 
 
 
 
-app.get('/guestbook', function(request, response){
-  response.render("guestbook.hbs",{ title:"GuestBook Page" })
+app.get('/guestbook', function (request, response) {
+  response.render("guestbook.hbs", { title: "GuestBook Page" })
 })
 
 
 
 
-app.get('/about', function(request, response){
-  response.render("about.hbs",{ title:"About Page" })
+app.get('/about', function (request, response) {
+  response.render("about.hbs", { title: "About Page" })
 })
 
 
 
 
-app.get('/contact', function(request, response){
-  response.render("contact.hbs",{ title:"Contact Page" })
+app.get('/contact', function (request, response) {
+  response.render("contact.hbs", { title: "Contact Page" })
 })
 
 

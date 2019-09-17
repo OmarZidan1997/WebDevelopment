@@ -1,10 +1,6 @@
 {{#if blog_post}}
-    <div class="column col-12">
-        <div class="text-center">
-            <h2>{{blog_post.title}}</h2>
-        </div>
-        <p>{{blog_post.content}}</p>
-    </div>
+    <h2 class="text-center">{{blog_post.title}}</h2>
+    <p>{{blog_post.content}}</p>
 {{else}}
     <p>No blog post with that id.</p>
 {{/if}}
