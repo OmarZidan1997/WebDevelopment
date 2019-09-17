@@ -1,4 +1,4 @@
-body,html{
+/*,html{
     background-color: #212227;
     height: 100%;
     width: 100%;
@@ -11,6 +11,15 @@ body,html{
     color: white;
     background-color: #546A76;
     min-height: 88%;
+}
+*/
+html,body{
+    background-color: #212227;
+    color: gainsboro;
+    min-height: 100vh;
+}
+#header-main{
+    background-color: #887880;
 }
 .navbar{
     background-color: #8693AB;
@@ -28,6 +37,7 @@ footer{
 }
 .off-canvas .off-canvas-sidebar{
     background-color:  #8693AB !important;
+    min-height: 100vh;
 }
 #sidebar-left a{
     color: white;

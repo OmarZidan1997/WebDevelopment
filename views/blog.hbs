@@ -1,12 +1,13 @@
 <h2>All Blog Posts</h2>
 {{#if blog_posts.length}}
-    <ul>{{#each blog_posts}}
-        <li><a href="/blog/{{id}}">{{title}}</a></li>
-        {{/each}}
-    </ul>
+{{#each blog_posts}}
+    <div class="text-center">
+        <a href="/blog/{{id}}">{{title}}</a>
+    </div>
+{{/each}}
 {{else}}
 <p>Sorry There are no blogposts</p>
 {{/if}}
 <a href="/create-blog-post">
-<button class="btn btn-primary" value="create post">create post</button>
+    <button class="btn btn-primary" value="create post">create post</button>
 </a>
