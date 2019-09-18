@@ -1,9 +1,16 @@
 <h2>All Blog Posts</h2>
 {{#if blog_posts.length}}
 {{#each blog_posts}}
-    <div class=" column col 12 text-center">
-        <a href="/blog/{{id}}">{{title}}</a>
+<div class="container">
+    <div class="columns">
+        <div class=" column col-10 text-center">
+            <a href="/blog/{{id}}">{{title}}</a>
+        </div>
+        <div class="column col-2">
+            <button class="btn btn-error">delete</button>
+        </div>
     </div>
+</div>
 {{/each}}
 {{else}}
 <p>Sorry There are no blogposts</p>
