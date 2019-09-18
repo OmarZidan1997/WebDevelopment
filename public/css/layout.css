@@ -1,25 +1,27 @@
 html,body{
     background-color: #212227;
+        background-image: url("/images/background.jpg");
+
     color: gainsboro;
     min-height: 100vh;
 }
 #header-main{
     background-color: #887880;
-    min-width: 100vw;
+    width: 100%;
 }
 .navbar{
     background-color: #8693AB;
 }
 
-.navbar-center a{
-    color: white !important;
+.navbar-center a:hover{
+    background-color: black !important;
 }
 
 footer{
     background-color: #887880;
     position: fixed;
     bottom: 0;
-    width: 100vw;
+    width: 100%;
 }
 .off-canvas .off-canvas-sidebar{
     background-color:  #8693AB !important;
@@ -30,4 +32,7 @@ footer{
     color: white;
     margin: 10px;
     display: block;
+}
+#sidebar-left a:hover{
+    color: red;
 }

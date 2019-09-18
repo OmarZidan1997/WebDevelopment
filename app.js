@@ -104,7 +104,9 @@ app.post("/create-blog-post", function (request, response) {
   else{
 
     const model = {
-      validationErrors
+      validationErrors,
+      title,
+      content
     }
 
     response.render("create-blog-post.hbs",model)

@@ -1,16 +1,18 @@
-
 {{#if validationErrors.length}}
-	<p>Errors:</p>
-	<ul>
-		{{#each validationErrors}}
-			<li>{{this}}</li>
-		{{/each}}
-	</ul>
+<p>Errors:</p>
+<ul>
+    {{#each validationErrors}}
+    <li>{{this}}</li>
+    {{/each}}
+</ul>
 {{/if}}
 
-<form action="" method="POST">
+<form class="form-horizontal" action="" method="POST">
     <div class="form-group">
-        <label class="form-label" for="title">title</label>
+        <div class="col-3 col-sm-12">
+            <label class="form-label" for="title">title</label>F
+        </div>
+
         <input class="form-input" type="text" name="title" placeholder="please enter title">
         <label class="form-label" for="content">content</label>
         <textarea class="form-input" name="content" placeholder="write your content" rows="6"></textarea>
