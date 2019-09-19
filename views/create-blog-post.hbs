@@ -1,13 +1,15 @@
-{{#if validationErrors.length}}
-<p>Errors:</p>
-<ul>
-    {{#each validationErrors}}
-    <li>{{this}}</li>
-    {{/each}}
-</ul>
+{{#if errors}}
+    <p>{{errors}}</p>
+{{else if validationErrors.length}}
+    <p>Errors:</p>
+    <ul>
+        {{#each validationErrors}}
+        <li>{{this}}</li>
+        {{/each}}
+    </ul>
 {{/if}}
 
-<form class="form-horizontal col-10" action="" method="POST">
+<form class="form-horizontal col-10" action="/blog" method="POST">
     <div class="form-group">
         <div class="col-3 col-sm-12">
             <label class="form-label" for="title">title</label>
@@ -20,7 +22,7 @@
         </div>
         <div class="col-9 col-sm-12">
             <textarea class="form-input" name="content" placeholder="write your content" rows="6">{{content}}</textarea>
-        </div> 
+        </div>
     </div>
     <button class="btn btn-primary" value="create post">submit</button>
 </form>

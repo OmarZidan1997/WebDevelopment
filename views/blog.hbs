@@ -1,19 +1,23 @@
 <h2>All Blog Posts</h2>
-{{#if blog_posts.length}}
-{{#each blog_posts}}
-<div class="container">
-    <div class="columns col-gapless">
-        <div class=" column col-10 col-sm-8 text-center">
-            <a href="/blog/{{id}}">{{title}}</a>
+{{#if error}}
+    <p>{{error}}</p>
+{{else if blogPosts}}
+    {{#each blogPosts}}
+        <div class="container">
+            <div class="columns col-gapless">
+                <div class=" column col-10 col-sm-8 text-center">
+                    <a href="/blog/{{id}}">{{title}}</a>
+                </div>
+                <div class="column col-2 col-sm-2">
+                    <form action="/delete-blog-post:{{id}}" method="POST">
+                        <button class="btn btn-error">delete</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="column col-2 col-sm-2">
-            <button class="btn btn-error">delete</button>
-        </div>
-    </div>
-</div>
-{{/each}}
+    {{/each}}
 {{else}}
-<p>Sorry There are no blogposts</p>
+    <p>Sorry There are no blogposts</p>
 {{/if}}
 <a href="/create-blog-post">
     <button class="btn btn-primary" value="create post">create post</button>

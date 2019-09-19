@@ -1,6 +1,8 @@
-{{#if blog_post}}
-    <h2 class="text-center">{{blog_post.title}}</h2>
-    <p>{{blog_post.content}}</p>
+{{#if error}}
+    <p>{{error}}</p>
+{{else if blogPost}}
+    <h2 class="text-center">{{blogPost.title}}</h2>
+    <p>{{blogPost.content}}</p>
 {{else}}
     <p>No blog post with that id.</p>
 {{/if}}

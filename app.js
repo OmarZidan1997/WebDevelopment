@@ -1,12 +1,13 @@
-const dummyData = require('./dummy-data')
 const express = require('express')
 const expressHandlebars = require('express-handlebars')
 const bodyParser = require('body-parser')
 
+const db = require('./db')
+
 const app = express()
 
 app.engine("hbs", expressHandlebars({
-  defaultLayout: 'main.hbs'
+  defaultLayout: "main.hbs"
 }))
 
 app.use(bodyParser.urlencoded({
@@ -32,16 +33,68 @@ app.get('/home', function (request, response) {
 
 
 
-// blog section //
+//        blog section          //
+
+// Get all posts
 app.get('/blog', function (request, response) {
-  const model = {
-    blog_posts: dummyData.blog_posts
+  db.getAllBlogPosts(function (error, blogPosts) {
+    var model = {}
+    if(error){
+      model = {
+        error: error
+      }
+    } else {
+     model = {
+       blogPosts: blogPosts
+     }
+    }
+    response.render("blog.hbs", model)
+  })
+})
+// Create a blog post 
+app.post("/blog", function (request, response) {
+
+  const title = request.body.title
+  const content = request.body.content
+  
+  var model = {}
+  const validationErrors = []
+
+  if (title == "")
+    validationErrors.push("Must enter title")
+  if (title.length <= 10)
+    validationErrors.push("Please enter more than 10 letters in the title field")
+  if (content == "")
+    validationErrors.push("Must Enter content")
+  if (content.length <= 50)
+    validationErrors.push("Must enter content with more than 50 letters in the content field")
+
+  if (validationErrors.length == 0) {
+    db.createBlogPost(title,content, function(error,id){
+      if(error){
+        model = {
+          error,
+          title,
+          content
+        }
+        response.render("create-blog-post.hbs",model)
+      } else{
+        response.redirect("/blog/" + id)
+      }
+    })
   }
-  response.render("blog.hbs", model)
+  else{
+    model = {
+      title,
+      content,
+      validationErrors
+    }
+    response.render("create-blog-post.hbs",model)
+  }
 })
 
 
-
+// show a specific blog post
 app.get('/create-blog-post', function (request, response) {
   const model = {
     validationErrors: []
@@ -54,68 +107,23 @@ app.get('/create-blog-post', function (request, response) {
 app.get("/blog/:id", function (request, response) {
 
   const id = parseInt(request.params.id) //converts the id from string to int
-
-  const blog_post = dummyData.blog_posts.find(b => b.id == id)
-
-  const model = {
-    blog_post
-  }
-
-  response.render("blog-post.hbs", model)
-})
-
-
-
-app.post("/create-blog-post", function (request, response) {
-
-  const title = request.body.title
-  const content = request.body.content
-
-  const validationErrors = []
-
-  if (title == "") {
-    validationErrors.push("Must enter title")
-  }
-
-  if(title.length <= 10){
-    validationErrors.push("Please enter more than 10 letters in the title field")
-  }
-  if (content == "") {
-    validationErrors.push("Must Enter content")
-  }
-
-  if(content.length <= 50 ){
-    validationErrors.push("Must enter content with more than 50 letters in the content field")
-  }
-
-  if (validationErrors.length == 0) {
-
-    const blog_post_entry = {
-      id: dummyData.blog_posts.length + 1,
-      title,
-      content
+  var model = {}
+  db.getBlogPostById(id,function(error,blogPost){
+    if(error){
+      model = {
+        error: error
+      }
+      response.render("blog-post.hbs",model)
     }
-
-    dummyData.blog_posts.push(blog_post_entry)
-
-    response.redirect("/blog/" + blog_post_entry.id)
-
-  }
-  else{
-
-    const model = {
-      validationErrors,
-      title,
-      content
+    else{
+      model = {
+        blogPost: blogPost
+      }
+      response.render("blog-post.hbs",model)
     }
-
-    response.render("create-blog-post.hbs",model)
-
-  }
+  })
 
 })
-
-
 
 
 app.get('/guestbook', function (request, response) {
