@@ -7,15 +7,20 @@
 </ul>
 {{/if}}
 
-<form class="form-horizontal" action="" method="POST">
+<form class="form-horizontal col-10" action="" method="POST">
     <div class="form-group">
         <div class="col-3 col-sm-12">
-            <label class="form-label" for="title">title</label>F
+            <label class="form-label" for="title">title</label>
         </div>
-
-        <input class="form-input" type="text" name="title" placeholder="please enter title">
-        <label class="form-label" for="content">content</label>
-        <textarea class="form-input" name="content" placeholder="write your content" rows="6"></textarea>
+        <div class="col-9 col-sm-12">
+            <input class="form-input" type="text" name="title" value="{{title}}" placeholder="please enter title">
+        </div>
+        <div class="col-3 col-sm-12">
+            <label class="form-label" for="content">content</label>
+        </div>
+        <div class="col-9 col-sm-12">
+            <textarea class="form-input" name="content" placeholder="write your content" rows="6">{{content}}</textarea>
+        </div> 
     </div>
     <button class="btn btn-primary" value="create post">submit</button>
 </form>

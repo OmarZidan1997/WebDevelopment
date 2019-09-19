@@ -1,12 +1,14 @@
 html,body{
-    background-color: #212227;
-        background-image: url("/images/background.jpg");
-
+    background-image: url("/images/background.jpg");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment : fixed;
     color: gainsboro;
-    min-height: 100vh;
+    background-size: 100% 100%;
 }
+
 #header-main{
-    background-color: #887880;
     width: 100%;
 }
 .navbar{
@@ -18,13 +20,13 @@ html,body{
 }
 
 footer{
-    background-color: #887880;
+    /* background-color: #887880; */
     position: fixed;
     bottom: 0;
     width: 100%;
 }
 .off-canvas .off-canvas-sidebar{
-    background-color:  #8693AB !important;
+    background-color:  #6290C8 !important;
     min-height: 100vh;
 }
 

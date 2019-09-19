@@ -78,14 +78,14 @@ app.post("/create-blog-post", function (request, response) {
   }
 
   if(title.length <= 10){
-    validationErrors.push("Please enter more than 10 letters ")
+    validationErrors.push("Please enter more than 10 letters in the title field")
   }
   if (content == "") {
     validationErrors.push("Must Enter content")
   }
 
   if(content.length <= 50 ){
-    validationErrors.push("Must enter content with more than 50 letters")
+    validationErrors.push("Must enter content with more than 50 letters in the content field")
   }
 
   if (validationErrors.length == 0) {
