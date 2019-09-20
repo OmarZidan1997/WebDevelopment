@@ -11,6 +11,7 @@ db.run(`
 `)
 
 exports.getAllBlogPosts = function(callback){
+
     const query = "SELECT * FROM blogPosts"
 
     db.all(query,function(error,blogPosts){
@@ -20,6 +21,7 @@ exports.getAllBlogPosts = function(callback){
 }
 
 exports.createBlogPost = function(title,content,callback){
+
     const query = "INSERT INTO blogPosts(title,content) VALUES(?,?)"
     const values = [title,content]
     
@@ -35,6 +37,16 @@ exports.getBlogPostById = function(id,callback){
 
     db.get(query,values,function(error,blogPost){
         callback(error,blogPost)
+    })
+}
+
+exports.deleteBlogPostById = function(id,callback){
+
+    const query = "DELETE FROM blogPosts WHERE id = ?"
+    const values = [id]
+
+    db.run(query,values,function(error){
+        callback(error)
     })
 }
 

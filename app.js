@@ -17,17 +17,9 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static('public'));
 
+
+
 app.get('/', function (request, response) {
-  const model = {
-    humans: dummyData.humans,
-    pets: dummyData.pets
-  }
-  response.render("show-all-humans.hbs", model)
-})
-
-
-
-app.get('/home', function (request, response) {
   response.render("home.hbs", { title: "Home Page" })
 })
 
@@ -94,7 +86,7 @@ app.post("/blog", function (request, response) {
 })
 
 
-// show a specific blog post
+// show create blog form
 app.get('/create-blog-post', function (request, response) {
   const model = {
     validationErrors: []
@@ -103,27 +95,48 @@ app.get('/create-blog-post', function (request, response) {
 })
 
 
-
+// get a specific blog post by ID
 app.get("/blog/:id", function (request, response) {
 
   const id = parseInt(request.params.id) //converts the id from string to int
   var model = {}
+
   db.getBlogPostById(id,function(error,blogPost){
     if(error){
       model = {
         error: error
       }
+
       response.render("blog-post.hbs",model)
     }
     else{
       model = {
         blogPost: blogPost
       }
+
       response.render("blog-post.hbs",model)
     }
+
   })
 
 })
+
+
+// delete blog post by ID
+app.post("/delete-blog-post/:id",function(request,response){
+
+  const id = parseInt(request.params.id)
+
+  db.deleteBlogPostById(id,function(error){
+    response.redirect("/blog")
+  })
+
+})
+
+
+
+// Blog section ends //
+
 
 
 app.get('/guestbook', function (request, response) {

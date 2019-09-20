@@ -1,23 +1,53 @@
 <h2>All Blog Posts</h2>
 {{#if error}}
-    <p>{{error}}</p>
-{{else if blogPosts}}
-    {{#each blogPosts}}
-        <div class="container">
-            <div class="columns col-gapless">
-                <div class=" column col-10 col-sm-8 text-center">
-                    <a href="/blog/{{id}}">{{title}}</a>
-                </div>
-                <div class="column col-2 col-sm-2">
-                    <form action="/delete-blog-post:{{id}}" method="POST">
-                        <button class="btn btn-error">delete</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    {{/each}}
+    <p>something went wrong</p>
 {{else}}
-    <p>Sorry There are no blogposts</p>
+    {{#if blogPosts}}
+        <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+            <th>Title</th>
+            <th></th>
+            </tr>
+        </thead>
+            <tbody>
+                {{#each blogPosts}}
+                        <tr class="active">
+                            <td>
+                                <a href="/blog/{{id}}">{{title}}</a>
+                            </td>
+                            <td>
+                                <div class="float-right ">
+                                    <form  class="d-inline-block" action="/delete-blog-post/{{id}}" method="POST">
+                                        <button class="btn btn-error">delete</button>
+                                    </form>
+                                    <form  class="d-inline-block"action="/delete-blog-post/{{id}}" method="POST">
+                                        <button class="btn btn-error">Edit</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                {{/each}}
+            </tbody>
+            </table>
+            {{!-- {{#each blogPosts}}
+                <div class="container">
+                    <div class="columns col-gapless">
+                        <div class=" column col-10 col-sm-8 text-center">
+                            <a href="/blog/{{id}}">{{title}}</a>
+                        </div>
+                        <div class="column col-2 col-sm-2">
+                            <form action="/delete-blog-post/{{id}}" method="POST">
+                                <button class="btn btn-error">delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {{/each}} --}}
+    {{else}}
+        <p>Sorry There are no blogposts</p>
+    {{/if}}
 {{/if}}
 <a href="/create-blog-post">
     <button class="btn btn-primary" value="create post">create post</button>
