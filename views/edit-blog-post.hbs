@@ -1,4 +1,4 @@
-<h2 class="text-center">Create a blog post </h2>
+<h2 class="text-center">Update blog post </h2>
 {{#if somethingWentWrong}}
     <p>external error</p>
 {{else}}
@@ -10,7 +10,7 @@
             {{/each}}
         </ul>
     {{/if}}
-    <form class="form-horizontal col-10" action="/blog" method="POST">
+    <form class="form-horizontal col-10" action="/edit-blog-post/{{blogPost.id}}" method="POST">
         <div class="form-group">
             <div class="col-3 col-sm-12">
                 <label class="form-label" for="title">title</label>
@@ -25,6 +25,7 @@
                 <textarea class="form-input" name="content" placeholder="write your content" rows="6">{{blogPost.content}}</textarea>
             </div>
         </div>
-    <button class="btn btn-primary" value="create post">submit</button>
+    <button class="btn btn-primary" value="edit post">submit</button>
     </form>
 {{/if}}
+

@@ -40,6 +40,15 @@ exports.getBlogPostById = function(id,callback){
     })
 }
 
+exports.updateBlogPostById = function(newTitle, newContent, id, callback){
+    const query = "UPDATE blogPosts SET title = ?, content = ? WHERE id = ?"
+    const values = [newTitle, newContent, id]
+    console.table(values)
+    db.run(query,values,function(error){
+        callback(error)
+    })
+}
+
 exports.deleteBlogPostById = function(id,callback){
 
     const query = "DELETE FROM blogPosts WHERE id = ?"
@@ -49,4 +58,5 @@ exports.deleteBlogPostById = function(id,callback){
         callback(error)
     })
 }
+
 

@@ -6,6 +6,7 @@ html,body{
     background-attachment : fixed;
     color: gainsboro;
     background-size: 100% 100%;
+    box-sizing: border-box;
 }
 
 #header-main{
@@ -38,3 +39,4 @@ footer{
 #sidebar-left a:hover{
     color: red;
 }
+/**** guestbook ****/
