@@ -3,7 +3,29 @@
     <p>external error</p>
 {{else}}
     {{#if blogPosts}}
-        <table class="table table-striped table-hover bg-dark">
+        <div class="columns">
+            {{#each blogPosts}}
+                <div class="column col-12 col-xs-4 ">
+                    <div class="card bg-dark">
+                        <div class="card-header p-centered">
+                            <div class="card-title h5">{{title}}</div>
+                        </div>
+                        <div class="card-footer">
+                            <form action="/blog/{{id}}" class="d-inline-block">
+                                <button class="btn btn-primary d-inline-block">visit</button>
+                            </form>
+                            <form action="/delete-blog-post/{{id}}" class="d-inline-block" method="POST">
+                                <button class="btn btn-error">delete</button>
+                            </form>
+                            <form  class="d-inline-block"action="/edit-blog-post/{{id}}" class="d-inline-block" method="GET">
+                                <button class="btn btn-error">Edit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+        </div>
+        {{!-- <table class="table table-striped table-hover bg-dark">
         <thead>
             <tr>
             <th>Title</th>
@@ -30,7 +52,7 @@
                         
                 {{/each}}
             </tbody>
-            </table>
+            </table> --}}
             {{!-- {{#each blogPosts}}
                 <div class="container">
                     <div class="columns col-gapless">

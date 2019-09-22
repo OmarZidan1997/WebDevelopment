@@ -227,6 +227,10 @@ app.get('/guestbook', function (request, response) {
   response.render("guestbook.hbs", { title: "GuestBook Page" })
 })
 
+app.get('/portfolio', function (request, response) {
+  response.render("portfolio.hbs")
+})
+
 
 
 
