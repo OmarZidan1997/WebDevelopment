@@ -7,8 +7,11 @@
             {{#each blogPosts}}
                 <div class="column col-12 col-xs-4 ">
                     <div class="card bg-dark">
-                        <div class="card-header p-centered">
-                            <div class="card-title h5">{{title}}</div>
+                        <div class="card-header p-centered hide-md p-1">
+                            <div class="card-title h5 text-break">{{title}}</div>
+                        </div>
+                        <div class="card-header p-centered show-md p-1">
+                            <div class="card-title h6 text-break">{{title}}</div>
                         </div>
                         <div class="card-footer">
                             <form action="/blog/{{id}}" class="d-inline-block">

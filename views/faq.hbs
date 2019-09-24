@@ -1,0 +1,42 @@
+<div class="container">
+    <form class="form col-10" action="/blog" method="POST">
+        <div class="form-group">
+            <div class="col-3 col-sm-12">
+                <label class="form-label" for="name">Name</label>
+            </div>
+            <div class="col-9 col-sm-12">
+                <input class="form-input" type="text" name="name" value="{{blogPost.title}}" placeholder="please enter your name">
+            </div>
+            <div class="col-3 col-sm-12">
+                <label class="form-label" for="title">Surname</label>
+            </div>
+            <div class="col-9 col-sm-12">
+                <input class="form-input" type="text" name="surname" value="{{blogPost.title}}" placeholder="please enter your surname">
+            </div>
+            <div class="col-3 col-sm-12">
+                <label class="form-label" for="question">Question</label>
+            </div>
+            <div class="col-9 col-sm-12">
+                <textarea class="form-input" name="content" placeholder="please write your question" rows="6">{{blogPost.content}}</textarea>
+            </div>
+        </div>
+    <button class="btn btn-primary" value="create post">submit</button>
+    </form>
+    
+    <div class="divider"></div>
+
+    <div class="columns bg-dark m-1">
+        <div class = "column col-12">
+            <p> Name: Omar</p>
+        </div>
+        <div class = "column col-12">
+            <p> Surname: wdawdwad</p>
+        </div>
+        <div class="column col-12">
+            <p>Content</p>
+        </div>
+        <div class="column col-12">
+            <p>text area</p>
+        </div>
+    </div>
+</div>

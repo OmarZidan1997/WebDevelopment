@@ -220,11 +220,11 @@ app.post("/edit-blog-post/:id", function(request,response){
 
 
 // Blog section ends //
+//-------------------//
 
-
-
-app.get('/guestbook', function (request, response) {
-  response.render("guestbook.hbs", { title: "GuestBook Page" })
+//FAQ
+app.get('/faq', function (request, response) {
+  response.render("faq.hbs")
 })
 
 app.get('/portfolio', function (request, response) {

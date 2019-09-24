@@ -1,8 +1,8 @@
 {{#if error}}
     <p>{{error}}</p>
 {{else if blogPost}}
-    <h2 class="text-center">{{blogPost.title}}</h2>
-    <p>{{blogPost.content}}</p>
+    <h2 class="text-center text-break">{{blogPost.title}}</h2>
+    <p class="text-break">{{blogPost.content}}</p>
 {{else}}
     <p>No blog post with that id.</p>
 {{/if}}
