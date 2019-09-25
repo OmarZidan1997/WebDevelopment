@@ -1,11 +1,11 @@
-<h2>All Blog Posts</h2>
+<h1 class="text-center text-break">All Blog Posts</h2>
 {{#if somethingWentWrong}}
     <p>external error</p>
 {{else}}
     {{#if blogPosts}}
         <div class="columns">
             {{#each blogPosts}}
-                <div class="column col-12 col-xs-4 ">
+                <div class="column col-12 col-xs-12 ">
                     <div class="card bg-dark">
                         <div class="card-header p-centered hide-md p-1">
                             <div class="card-title h5 text-break">{{title}}</div>
@@ -17,10 +17,10 @@
                             <form action="/blog/{{id}}" class="d-inline-block">
                                 <button class="btn btn-primary d-inline-block">visit</button>
                             </form>
-                            <form action="/delete-blog-post/{{id}}" class="d-inline-block" method="POST">
+                            <form action="/blog/delete-blog-post/{{id}}" class="d-inline-block" method="POST">
                                 <button class="btn btn-error">delete</button>
                             </form>
-                            <form  class="d-inline-block"action="/edit-blog-post/{{id}}" class="d-inline-block" method="GET">
+                            <form  class="d-inline-block"action="/blog/edit-blog-post/{{id}}" class="d-inline-block" method="GET">
                                 <button class="btn btn-error">Edit</button>
                             </form>
                         </div>
@@ -74,6 +74,6 @@
         <p>Sorry There are no blogposts</p>
     {{/if}}
 {{/if}}
-<a href="/create-blog-post">
+<a href="/blog/create-blog-post">
     <button class="btn btn-primary" value="create post">create post</button>
 </a>

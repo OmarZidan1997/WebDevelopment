@@ -2,11 +2,22 @@ const sqlite3 = require("sqlite3")
 
 const db = new sqlite3.Database("database.db")
 
+/*----------Blog--------------- */
+/*------------------------------*/
 db.run(`
 	CREATE TABLE IF NOT EXISTS blogPosts (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT,
         content TEXT
+	)
+`)
+db.run(`
+	CREATE TABLE IF NOT EXISTS blogPostComments (
+		commentid INTEGER PRIMARY KEY AUTOINCREMENT,
+		name TEXT,
+		comment TEXT,
+		blogId INTEGER,
+		FOREIGN KEY (blogId) REFERENCES blogPosts(id)
 	)
 `)
 
@@ -32,7 +43,7 @@ exports.createBlogPost = function(title,content,callback){
 }
 
 exports.getBlogPostById = function(id,callback){
-    const query = "SELECT * FROM blogPosts WHERE id = ?"
+    const query = "SELECT * FROM blogPosts WHERE id = ? "
     const values = [id]
 
     db.get(query,values,function(error,blogPost){
@@ -59,4 +70,26 @@ exports.deleteBlogPostById = function(id,callback){
     })
 }
 
+/*----------Blog comments--------------- */
+/*--------------------------------------*/
 
+
+
+exports.createBlogComment = function(blogId,name,comment,callback){
+
+    const query = "INSERT INTO blogPostComments (name,comment,blogId) VALUES(?,?,?)"
+    const values = [name,comment,blogId]
+    
+    db.run(query,values,function(error){
+        callback(error)
+    })
+}
+
+exports.getAllBlogPostComments = function(blogId,callback){
+
+    const query = "SELECT * FROM blogComments WHERE blogId = ?"
+    const values = [blogId]
+    db.all(query,values,function(error,blogComments){
+        callback(error,blogComments)
+    })
+}

@@ -6,6 +6,7 @@ html,body{
     background-attachment : fixed;
     color: gainsboro;
     box-sizing: border-box;
+    margin-bottom: 20px;
 }
 
 #header-main{
@@ -20,7 +21,7 @@ html,body{
 }
 
 footer{
-    /* background-color: #887880; */
+    background-color: #546A7B; 
     position: fixed;
     bottom: 0;
     width: 100%;
