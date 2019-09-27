@@ -195,24 +195,30 @@ router.get('/', function (request, response) {
   })
 
   
-// app.post("/createcomment/:id", function(request, response){
+router.post("/:id/createcomment", function(request, response){
     
-// 	const blogID = parseInt(request.params.id) 
-// 	const name = request.body.name
-// 	const comment = request.body.comment
+	const blogId = parseInt(request.params.id) 
+	const name = request.body.name
+  const comment = request.body.comment
+  var model = {}
+  
+  db.createBlogPostComment(name,comment,blogId,function(error){
+    if(error){
+
+      model = {
+        somethingWentWrong: true,
+      }
+
+      response.render("create-blog-post.hbs",model)
+    } 
+    else{
+
+      response.redirect("/blog/" + blogId)
+    }
+
+  })
 	
-// 	// When creating a resource with a relation...
-// 	const query = "INSERT INTO comments (name, message, humanId) VALUES (?, ?, ?)"
-// 	const values = [name, message, humanId]
-	
-// 	db.run(query, values, function(error){
-		
-// 		// ...handle foreign key violation errors here!
-// 		// (you can use error.message to figure out type of error)
-		
-// 	})
-	
-// })
+})
 
   
   module.exports = router

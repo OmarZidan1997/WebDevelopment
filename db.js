@@ -45,6 +45,12 @@ exports.createBlogPost = function(title,content,callback){
 exports.getBlogPostById = function(id,callback){
     const query = "SELECT * FROM blogPosts WHERE id = ? "
     const values = [id]
+        
+    // SELECT *
+    // FROM blogPosts as bp
+    // INNER JOIN blogPostComments as bpc
+    // ON bpc.blogId = bp.id
+    // WHERE bp.id = 89
 
     db.get(query,values,function(error,blogPost){
         callback(error,blogPost)
@@ -75,9 +81,9 @@ exports.deleteBlogPostById = function(id,callback){
 
 
 
-exports.createBlogComment = function(blogId,name,comment,callback){
+exports.createBlogPostComment = function(name,comment,blogId,callback){
 
-    const query = "INSERT INTO blogPostComments (name,comment,blogId) VALUES(?,?,?)"
+    const query = "INSERT INTO blogPostComments (name,comment,blogId) VALUES (?,?,?)"
     const values = [name,comment,blogId]
     
     db.run(query,values,function(error){
