@@ -43,16 +43,27 @@ exports.createBlogPost = function(title,content,callback){
 }
 
 exports.getBlogPostById = function(id,callback){
-    const query = "SELECT * FROM blogPosts WHERE id = ? "
+    
     const values = [id]
-        
-    // SELECT *
-    // FROM blogPosts as bp
-    // INNER JOIN blogPostComments as bpc
-    // ON bpc.blogId = bp.id
-    // WHERE bp.id = 89
+    const query = `SELECT * FROM blogPosts WHERE id = ?`
 
     db.get(query,values,function(error,blogPost){
+        callback(error,blogPost)
+    })
+}
+
+exports.getBlogPostAndCommentsById = function(id,callback){
+    
+    const values = [id]
+    const query = `
+    SELECT bp.id,bp.title,bp.content,bpc.commentid,bpc.name,bpc.comment
+    FROM blogPosts as bp
+    LEFT JOIN blogPostComments as bpc 
+    ON bpc.blogId = bp.id
+    WHERE bp.id = ?
+    `
+
+    db.all(query,values,function(error,blogPost){
         callback(error,blogPost)
     })
 }
@@ -60,7 +71,6 @@ exports.getBlogPostById = function(id,callback){
 exports.updateBlogPostById = function(newTitle, newContent, id, callback){
     const query = "UPDATE blogPosts SET title = ?, content = ? WHERE id = ?"
     const values = [newTitle, newContent, id]
-    console.table(values)
     db.run(query,values,function(error){
         callback(error)
     })
@@ -91,11 +101,11 @@ exports.createBlogPostComment = function(name,comment,blogId,callback){
     })
 }
 
-exports.getAllBlogPostComments = function(blogId,callback){
+exports.deleteBlogPostCommentById = function(commentId,callback){
 
-    const query = "SELECT * FROM blogComments WHERE blogId = ?"
-    const values = [blogId]
-    db.all(query,values,function(error,blogComments){
-        callback(error,blogComments)
+    const query = "DELETE FROM blogPostComments WHERE commentId = ?"
+    const values = [commentId]
+    db.run(query,values,function(error){
+        callback(error)
     })
 }

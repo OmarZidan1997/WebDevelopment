@@ -25,14 +25,14 @@ router.get('/', function (request, response) {
   
     const title = request.body.title
     const content = request.body.content
-    
     var model = {}
     const validationErrors = []
   
-    if (title == ""){
+    if (title == null || title.trim() == "" ){
       validationErrors.push("Must enter title")
     }
-    if (content == ""){
+
+    if (content == null || content.trim() == ""){
       validationErrors.push("Must Enter content")
     }
   
@@ -66,12 +66,8 @@ router.get('/', function (request, response) {
   })
   
   
-  // get create blog post form
   router.get('/create-blog-post', function (request, response) {
-    const model = {
-      validationErrors: []
-    }
-    response.render("create-blog-post.hbs", model)
+    response.render("create-blog-post.hbs")
   })
   
   
@@ -80,13 +76,14 @@ router.get('/', function (request, response) {
   
     const id = parseInt(request.params.id) //converts the id from string to int
     var model = {}
-    db.getBlogPostById(id,function(error,blogPost){
+    db.getBlogPostAndCommentsById(id,function(error,blogPost){
       if(error){
         model = {
           somethingWentWrong : true
         }
       }
       else{
+        console.table(blogPost)
         model = {
           somethingWentWrong: false,
           blogPost
@@ -148,10 +145,10 @@ router.get('/', function (request, response) {
     var model = {}
     const validationErrors = []
   
-    if (title == ""){
+    if (title == null || title.trim() == "" ){
       validationErrors.push("Must enter title")
     }
-    if (content == ""){
+    if (content == null || content.trim() == ""){
       validationErrors.push("Must Enter content")
     }
   
@@ -170,7 +167,7 @@ router.get('/', function (request, response) {
       })
     }
     else{
-      db.getBlogPostById(id,function(error,blogPost){ 
+      db.getBlogPostById(id,function(error,blogPost){
         if(error){
   
           model = {
@@ -219,6 +216,90 @@ router.post("/:id/createcomment", function(request, response){
   })
 	
 })
+
+router.post("/:id/createcomment", function(request, response){
+    
+	const blogId = parseInt(request.params.id) 
+	const name = request.body.name
+  const comment = request.body.comment
+  const validationErrors = []
+
+  var model = {}
+
+  if (name == null || name.trim() == "" ){
+    validationErrors.push("Must enter name")
+  }
+  if (comment == null || comment.trim() == ""){
+    validationErrors.push("Must Enter comment")
+  }
+
+  if(validationErrors.length == 0){
+    db.createBlogPostComment(name,comment,blogId,function(error){
+      if(error){
+  
+        model = {
+          somethingWentWrong: true,
+        }
+  
+        response.render("create-blog-post.hbs",model)
+      } 
+      else{
+  
+        response.redirect("/blog/" + blogId)
+      }
+  
+    })
+  }
+  else{
+    
+    db.getBlogPostAndCommentsById(blogId,function(error,blogPost){
+      if(error){
+  
+        model = {
+          somethingWentWrong : true
+        }
+  
+        response.render("blog-post.hbs",model)
+      }
+      else{
+        model = {
+          somethingWentWrong : false,
+          validationErrors,
+          blogPost
+        }
+  
+        response.render("blog-post.hbs",model)
+      }
+    })
+
+  }
+	
+})
+
+router.post("/:id/deletecomment/:commentId", function(request, response){
+    
+  const commentId = parseInt(request.params.commentId)
+  const blogId = parseInt(request.params.id) 
+  var model = {}
+  
+  db.deleteBlogPostCommentById(commentId,function(error){
+    if(error){
+
+      model = {
+        somethingWentWrong: true,
+      }
+
+      response.render("create-blog-post.hbs",model)
+    } 
+    else{
+
+      response.redirect("/blog/" + blogId)
+    }
+
+  })
+	
+})
+
 
   
   module.exports = router

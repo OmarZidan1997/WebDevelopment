@@ -1,45 +1,65 @@
-{{#if error}}
-    <p>{{error}}</p>
+{{#if somethingWentWrong}}
+    <p>internal error with the server</p>
 {{else}}
+    {{#if validationErrors.length}}
+        <p>Errors:</p>
+        <ul>
+            {{#each validationErrors}}
+            <li>{{this}}</li>
+            {{/each}}
+        </ul>
+    {{/if}}
+    
     {{#if blogPost}}
-    <h2 class="text-center text-break">{{blogPost.title}}</h2>
-    <p class="text-break">{{blogPost.content}}</p>
-    <div class="divider"></div>
-    <div class="columns">
-        <div class="column col-6 col-xs-12">
-            <form action="/blog/{{blogPost.id}}/createcomment" method="POST">
-            <div class="form-group">
-                <input class="form-input" type="text" name="name"  placeholder="Name">
-                <input class="form-input" type="text" name="comment"  placeholder="comment">
-                <button class="btn btn-primary">submit</button>
+        <h2 class="text-center text-break">{{blogPost.0.title}}</h2>
+        <p class="text-break">{{blogPost.0.content}}</p>
+        
+        <div class="divider"></div>
+        <div class="columns">
+            <div class="column col-6 col-xs-12">
+                <form action="/blog/{{blogPost.0.id}}/createcomment" method="POST">
+                    <div class="form-group">
+                        <input class="form-input" type="text" name="name" placeholder="Name">
+                        <input class="form-input" type="text" name="comment" placeholder="comment">
+                        <button class="btn btn-primary">submit</button>
+                    </div>
+                </form>
             </div>
-            </form>
         </div>
-    </div>
-    <div class="divider"></div>
-    <div class="columns">
-        <div class="column col-12">
-            <div class="panel bg-dark">
-                <div class="panel-header text-center">
-                    <div class="panel-title  ">Comments</div>
-                </div>
-                <div class="panel-nav">
-                    <!-- navigation components: tabs, breadcrumbs or pagination -->
-                </div>
-                <div class="panel-body">
-                    <div class="tile">
-                        <div class="tile-content">
-                            <p class="tile-title text-bold text-break">name: Abood hamid</p>
-                            <p class="tile-subtitle text-break"> comment: man your website suck dick</p>
-                        </div>
+        <div class="divider"></div>
+        <div class="columns">
+            <div class="column col-12">
+                <div class="panel bg-dark">
+                    <div class="panel-header text-center">
+                        <div class="panel-title  ">Comments</div>
+                    </div>
+                    <div class="panel-nav">
+                        <!-- navigation components: tabs, breadcrumbs or pagination -->
+                    </div>
+                    <div class="panel-body">
+                        {{#if blogPost.0.comment}}
+                            {{#each blogPost}}
+                            <div class="tile">
+                                <div class="tile-content">
+                                    <p class="tile-title text-bold text-break">name: {{name}}</p>
+                                    <p class="tile-subtitle text-break"> comment: {{comment}}</p>
+                                    <form action="/blog/{{id}}/deletecomment/{{commentid}}" method="POST">
+                                        <button class="btn btn-primary">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                            {{/each}}
+                        {{else}}
+                            <div class="tile">
+                                <div class="tile-content">
+                                    <p class="tile-title text-bold text-break">No comments yet</p>
+                                </div>
+                            </div>
+                        {{/if}}
                     </div>
                 </div>
-                <div class="panel-footer">
-                    <!-- buttons or inputs -->
-                </div>
             </div>
         </div>
-    </div>
     {{else}}
     <p>No blog post with that id.</p>
     {{/if}}
