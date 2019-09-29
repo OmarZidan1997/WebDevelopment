@@ -10,13 +10,13 @@
         </ul>
     {{/if}}
     <div class="container"> 
-        <form class="form-horizontal col-12" action="/blog/edit-blog-post/{{blogPost.id}}" method="POST">
+        <form class="form-horizontal col-12" action="/guestbook/" method="POST">
             <div class="form-group">
                 <div class="col-5 col-sm-12">
-                    <input class="form-input" type="text" name="name" value="{{blogPost.title}}" placeholder="please enter title">
+                    <input class="form-input" type="text" name="name" value="{{name}}" placeholder="enter name">
                 </div>
                 <div class="col-5 col-sm-12">
-                    <input class="form-input" name="message" placeholder="write your content" >
+                    <input class="form-input" name="message"  value="{{message}}"placeholder="write message" >
                 </div>
                 
                 <div class="col-2 col-sm-2">
@@ -26,22 +26,63 @@
         </form>
         <div class="divider"></div>
         <div class="column col-12">
-            <table class="table table-striped table-hover bg-dark ">
-                <thead>
+            <table class="table table-striped table-hover  ">
+                <thead class="bg-dark">
                     <tr>
                     <th>name</th>
-                    <th>genre</th>
-                    <th>date</th>
-                    <th>date</th>
+                    <th>message</th>
+                    <th>Date</th>
+                    <th></th>
+                    <th>Admin answer</th>
+                    <th></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr class="active">
-                    <td><span class="text-dark">dark color</span></td>
-                    <td><span class="text-dark">dark color</span></td>
-                    <td><span class="text-dark">dark k c</span></td>
-                    <td> </td>
-                    </tr>
+                <tbody class="bg-gray">
+                    {{#if guestbook}}
+                        {{#each guestbook}}
+                            <tr class="active">
+                                <td><span class="text-dark text-break">{{name}}</span></td>
+                                <td><span class="text-dark text-break">{{comment}}</span></td>
+                                <td>2019-09-29</td>
+                                <td>
+                                    <form class="d-inline-block" action="/guestbook/deletecomment/{{id}}" method="POST">
+                                        <button>Delete comment</button>
+                                    </form>
+                                    {{#unless reply}}
+                                    <form class="d-inline-block"action="/guestbook/createReplyComment/{{id}}" method="GET">
+                                        <button>reply comment</button>
+                                    </form>
+                                    {{/unless}}
+                                </td>
+                                <td>
+                                    {{#if reply}}
+                                        <span class="text-dark text-break"> {{reply}}</span>
+                                    {{else}}
+                                        <span class="text-dark text-break"> No answer yet</span>
+                                    {{/if}}
+                                </td>
+                                <td>
+                                    {{#if reply}}
+                                    <form action="" class="d-inline-block">
+                                        <button>Delete Reply</button>
+                                    </form>
+                                    <form action="/guestbook/editReplyComment/{{id}}" class="d-inline-block" method="GET">
+                                        <button>EDIT Reply</button>
+                                    </form>
+                                    {{/if}}
+                                </td>
+                            </tr>
+                        {{/each}}
+                    {{else}}
+                        <tr class="active">
+                            <td><span class="text-dark text-break"> nothing yet</span></td>
+                            <td><span class="text-dark text-break"> nothing yet</span></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {{/if}}
                 </tbody>
             </table>
         </div>

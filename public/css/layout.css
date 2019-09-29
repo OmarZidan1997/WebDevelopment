@@ -39,4 +39,7 @@ footer{
 #sidebar-left a:hover{
     color: red;
 }
+ .column{
+    padding: 0.8rem;
+}
 /**** guestbook ****/

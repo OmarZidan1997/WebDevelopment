@@ -1,0 +1,21 @@
+
+{{#if somethingWentWrong}}
+<p>internal error</p>
+{{/if}}
+
+{{#if validationErrors.length}}
+<p>Errors:</p>
+<ul>
+  {{#each validationErrors}}
+  <li>{{this}}</li>
+  {{/each}}
+</ul>
+{{/if}}
+
+<form action="/guestbook/createReplyComment/{{guestbookId}}" method="POST">
+  <div class="form-group">
+    <label class="form-label" for="input-example-3">Message</label>
+    <textarea class="form-input" id="input-example-3" name="reply" placeholder="enter a reply message" rows="3"></textarea>
+  </div>
+    <button class="btn btn-primary" value="send-reply">reply</button>
+</form>

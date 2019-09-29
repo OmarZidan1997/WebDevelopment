@@ -2,6 +2,7 @@ const express = require('express')
 const expressHandlebars = require('express-handlebars')
 const bodyParser = require('body-parser')
 const blogRouter = require('./blogRouters')
+const guestbookRouter = require('./guestbookRouter')
 const db = require('./db')
 
 const app = express()
@@ -24,15 +25,15 @@ app.get('/', function (request, response) {
 })
 
 
-
-//        blog section          //
+//-----------------------------//
 app.use("/blog",blogRouter)
 //------------------------------//
 
-//FAQ
-app.get('/guestbook', function (request, response) {
-  response.render("guestbook.hbs")
-})
+
+//------------------------------//
+app.use("/guestbook",guestbookRouter)
+//------------------------------//
+
 
 app.get('/portfolio', function (request, response) {
   response.render("portfolio.hbs")

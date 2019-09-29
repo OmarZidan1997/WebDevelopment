@@ -1,0 +1,208 @@
+const express = require('express')
+const db = require('./db')
+
+const router = express.Router()
+
+
+// create guestbook comment
+router.post('/', function (request, response) {
+
+    const name = request.body.name
+    const message = request.body.name
+    var model = {}
+    const validationErrors = []
+
+    if (name == null || name.trim() == "") {
+        validationErrors.push("Must enter title")
+    }
+
+    if (message == null || message.trim() == "") {
+        validationErrors.push("Must Enter content")
+    }
+
+    if (validationErrors.length == 0) {
+        db.createGuestbookComment(name, message, function (error) {
+            if (error) {
+
+                model = {
+                    somethingWentWrong: true
+                }
+                response.render("guestbook.hbs", model)
+            }
+            else {
+
+                response.redirect("/guestbook/")
+            }
+        })
+    }
+    else {
+        db.getAllGuestbookComments(function (error, guestbook) {
+
+            var model = {}
+            if (error) {
+                model = {
+                    somethingWentWrong: true
+                }
+            } else {
+                console.table(guestbook)
+                model = {
+                    guestbook: guestbook,
+                    somethingWentWrong: false,
+                    validationErrors
+                }
+            }
+            response.render("guestbook.hbs", model)
+        })
+    }
+})
+
+// get all guestbook comments
+router.get('/', function (request, response) {
+    db.getAllGuestbookComments(function (error, guestbook) {
+
+        var model = {}
+        if (error) {
+            model = {
+                somethingWentWrong: true
+            }
+        } else {
+            console.table(guestbook)
+            model = {
+                guestbook: guestbook,
+                somethingWentWrong: false
+            }
+        }
+        response.render("guestbook.hbs", model)
+    })
+})
+
+// delete comment from guestbook
+router.post("/deletecomment/:id", function (request, response) {
+
+    const id = parseInt(request.params.id)
+
+    db.deleteCommentFromGuestbook(id, function (error) {
+        response.redirect("/guestbook/")
+    })
+})
+
+
+//gets reply form
+router.get("/createReplyComment/:id", function (request, response) {
+    const guestbookId = parseInt(request.params.id);
+    const model = { guestbookId }
+    response.render("guestbook-reply.hbs", model)
+})
+
+
+router.post("/createReplyComment/:id", function (request, response) {
+    const guestbookId = parseInt(request.params.id)
+    const reply = request.body.reply
+    var model = {}
+    const validationErrors = []
+
+    if (reply == null || reply.trim() == "") {
+        validationErrors.push("Must enter text")
+    }
+
+    if (validationErrors.length == 0) {
+        db.createGuestbookReply(guestbookId, reply, function (error) {
+            if (error) {
+
+                model = {
+                    somethingWentWrong: true
+                }
+                response.render("guestbook-reply.hbs", model)
+            }
+            else {
+
+                response.redirect("/guestbook/")
+            }
+        })
+    }
+    else {
+        model = {
+            somethingWentWrong: false,
+            guestbookId,
+            reply,
+            validationErrors
+        }
+        response.render("guestbook-reply.hbs", model)
+    }
+
+})
+
+router.get("/editReplyComment/:id", function (request, response) {
+    const guestbookId = parseInt(request.params.id);
+    var model = {}
+    db.getGuestbookReplyById(guestbookId, function (error, reply) {
+        if (error) {
+            model = {
+                somethingWentWrong: true
+            }
+
+            response.render("edit-guestbook-reply.hbs", model)
+        }
+        else {
+            console.table(reply)
+            model = {
+                somethingWentWrong: false,
+                guestbookId,
+                reply
+            }
+            response.render("edit-guestbook-reply.hbs", model)
+        }
+    })
+
+})
+
+router.post("/editReplyComment/:id", function (request, response) {
+
+    const id = parseInt(request.params.id)
+    const newReply = request.body.reply
+
+    var model = {}
+    const validationErrors = []
+
+    if (newReply == null || newReply.trim() == "") {
+        validationErrors.push("Must enter message")
+    }
+
+    if (validationErrors.length == 0) {
+
+        db.updateGuestbookReply(newReply, id, function (error) {
+            if (error) {
+                model = {
+                    somethingWentWrong: true
+                }
+                response.render("edit-guestbook-reply.hbs", model)
+            } else {
+                response.redirect("/guestbook")
+            }
+
+        })
+    }
+    else {
+        db.getGuestbookReplyById(id, function (error, reply) {
+            if (error) {
+                model = {
+                    somethingWentWrong: true
+                }
+
+                response.render("edit-guestbook-reply.hbs", model)
+            }
+            else {
+
+                model = {
+                    somethingWentWrong: false,
+                    validationErrors,
+                    guestbookId: id,
+                    reply
+                }
+                response.render("edit-guestbook-reply.hbs", model)
+            }
+        })
+    }
+})
+
+module.exports = router
