@@ -1,0 +1,41 @@
+<h1 class="text-center text-bold">Portfolio Projects</h1>
+<div class="container">
+    <div class="columns">
+        <div class="column col-12">
+            <form action="/portfolio/createproject" method="GET">
+                <button class="btn btn-primary" value="create post">create post</button>
+            </form>
+        </div>
+    </div>
+    <div class="columns">
+        {{#if somethingWentWrong}}
+        <p>internal error with server</p>
+        {{/if}}
+        {{#if projectIdAndTitle}}
+        {{#each projectIdAndTitle}}
+        <div class="column col-6 col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title h5 text-dark text-center">{{title}}</div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="card-body p-centered">
+                    <form class="d-inline-block" action="/portfolio/project/{{id}}" method="GET">
+                        <button class="btn btn-primary p-centered">visit</button>
+                    </form>
+                    <form class="d-inline-block" action="/portfolio/project/{{id}}" method="POST">
+                        <button class="btn btn-primary p-centered">delete</button>
+                    </form>
+                </div>
+                <div class="card-footer">
+                </div>
+            </div>
+        </div>
+        {{/each}}
+        {{else}}
+        <p>no projects yet!</p>
+        {{/if}}
+    </div>
+</div>

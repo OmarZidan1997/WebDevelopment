@@ -4,11 +4,31 @@ const db = require('./db')
 const router = express.Router()
 
 
+// get all guestbook comments
+router.get('/', function (request, response) {
+    db.getAllGuestbookComments(function (error, guestbook) {
+
+        var model = {}
+        if (error) {
+            model = {
+                somethingWentWrong: true
+            }
+        } else {
+            console.table(guestbook)
+            model = {
+                guestbook: guestbook,
+                somethingWentWrong: false
+            }
+        }
+        response.render("guestbook.hbs", model)
+    })
+})
+
 // create guestbook comment
 router.post('/', function (request, response) {
 
     const name = request.body.name
-    const message = request.body.name
+    const message = request.body.message
     var model = {}
     const validationErrors = []
 
@@ -48,7 +68,9 @@ router.post('/', function (request, response) {
                 model = {
                     guestbook: guestbook,
                     somethingWentWrong: false,
-                    validationErrors
+                    validationErrors,
+                    name,
+                    message
                 }
             }
             response.render("guestbook.hbs", model)
@@ -56,25 +78,6 @@ router.post('/', function (request, response) {
     }
 })
 
-// get all guestbook comments
-router.get('/', function (request, response) {
-    db.getAllGuestbookComments(function (error, guestbook) {
-
-        var model = {}
-        if (error) {
-            model = {
-                somethingWentWrong: true
-            }
-        } else {
-            console.table(guestbook)
-            model = {
-                guestbook: guestbook,
-                somethingWentWrong: false
-            }
-        }
-        response.render("guestbook.hbs", model)
-    })
-})
 
 // delete comment from guestbook
 router.post("/deletecomment/:id", function (request, response) {
@@ -205,4 +208,21 @@ router.post("/editReplyComment/:id", function (request, response) {
     }
 })
 
+router.post("/deleteReplyComment/:replyId", function (request, response) {
+
+    const replyId = parseInt(request.params.replyId)
+  
+    db.deleteGuestbookReplyById(replyId,function (error) {
+      if (error) {
+
+        //handle errors if couldnt delete reply
+      }
+      else {
+  
+        response.redirect("/guestbook/")
+      }
+  
+    })
+  
+  })
 module.exports = router

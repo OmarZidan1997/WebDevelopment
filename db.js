@@ -20,44 +20,44 @@ db.run(`
 		comment TEXT,
         blogId INTEGER,
         CONSTRAINT blogId
-        FOREIGN KEY (blogId) REFERENCES blogPosts(id)
-        ON DELETE CASCADE
+            FOREIGN KEY (blogId) REFERENCES blogPosts(id)
+            ON DELETE CASCADE
 	)
 `)
 
-exports.getAllBlogPosts = function(callback){
+exports.getAllBlogPosts = function (callback) {
 
     const query = "SELECT * FROM blogPosts"
 
-    db.all(query,function(error,blogPosts){
-        callback(error,blogPosts)
+    db.all(query, function (error, blogPosts) {
+        callback(error, blogPosts)
     })
 
 }
 
-exports.createBlogPost = function(title,content,callback){
+exports.createBlogPost = function (title, content, callback) {
 
     const query = "INSERT INTO blogPosts(title,content) VALUES(?,?)"
-    const values = [title,content]
-    
-    db.run(query,values,function(error){
+    const values = [title, content]
+
+    db.run(query, values, function (error) {
         const id = this.lastID
-        callback(error,id)
+        callback(error, id)
     })
 }
 
-exports.getBlogPostById = function(id,callback){
-    
+exports.getBlogPostById = function (id, callback) {
+
     const values = [id]
     const query = `SELECT * FROM blogPosts WHERE id = ?`
 
-    db.get(query,values,function(error,blogPost){
-        callback(error,blogPost)
+    db.get(query, values, function (error, blogPost) {
+        callback(error, blogPost)
     })
 }
 
-exports.getBlogPostAndCommentsById = function(id,callback){
-    
+exports.getBlogPostAndCommentsById = function (id, callback) {
+
     const values = [id]
     const query = `
     SELECT bp.id,bp.title,bp.content,bpc.commentid,bpc.name,bpc.comment
@@ -67,25 +67,25 @@ exports.getBlogPostAndCommentsById = function(id,callback){
     WHERE bp.id = ?
     `
 
-    db.all(query,values,function(error,blogPost){
-        callback(error,blogPost)
+    db.all(query, values, function (error, blogPost) {
+        callback(error, blogPost)
     })
 }
 
-exports.updateBlogPostById = function(newTitle, newContent, id, callback){
+exports.updateBlogPostById = function (newTitle, newContent, id, callback) {
     const query = "UPDATE blogPosts SET title = ?, content = ? WHERE id = ?"
     const values = [newTitle, newContent, id]
-    db.run(query,values,function(error){
+    db.run(query, values, function (error) {
         callback(error)
     })
 }
 
-exports.deleteBlogPostById = function(id,callback){
+exports.deleteBlogPostById = function (id, callback) {
 
     const query = "DELETE FROM blogPosts WHERE id = ?"
     const values = [id]
 
-    db.run(query,values,function(error){
+    db.run(query, values, function (error) {
         callback(error)
     })
 }
@@ -95,21 +95,21 @@ exports.deleteBlogPostById = function(id,callback){
 
 
 
-exports.createBlogPostComment = function(name,comment,blogId,callback){
+exports.createBlogPostComment = function (name, comment, blogId, callback) {
 
     const query = "INSERT INTO blogPostComments (name,comment,blogId) VALUES (?,?,?)"
-    const values = [name,comment,blogId]
-    
-    db.run(query,values,function(error){
+    const values = [name, comment, blogId]
+
+    db.run(query, values, function (error) {
         callback(error)
     })
 }
 
-exports.deleteBlogPostCommentById = function(commentId,callback){
+exports.deleteBlogPostCommentById = function (commentId, callback) {
 
     const query = "DELETE FROM blogPostComments WHERE commentId = ?"
     const values = [commentId]
-    db.run(query,values,function(error){
+    db.run(query, values, function (error) {
         callback(error)
     })
 }
@@ -148,24 +148,24 @@ db.run(`
         reply TEXT,
         guestbookId INTEGER,
         CONSTRAINT guestbookId
-        FOREIGN KEY (guestbookId) REFERENCES guestbook(id)
-        ON DELETE CASCADE
+            FOREIGN KEY (guestbookId) REFERENCES guestbook(id)
+            ON DELETE CASCADE
 	)
 `)
 /***********************************/
 
-exports.createGuestbookComment = function(name,message,callback){
+exports.createGuestbookComment = function (name, message, callback) {
 
     const query = "INSERT INTO guestbook(name,comment) VALUES(?,?)"
-    const values = [name,message]
-    
-    db.run(query,values,function(error){
+    const values = [name, message]
+
+    db.run(query, values, function (error) {
         callback(error)
     })
 }
 
-exports.getAllGuestbookComments = function(callback){
-    
+exports.getAllGuestbookComments = function (callback) {
+
     const query = `
     SELECT gb.id,gb.name,gb.comment,gbr.replyId,gbr.reply
     FROM guestbook as gb
@@ -173,45 +173,99 @@ exports.getAllGuestbookComments = function(callback){
     ON gbr.guestbookId = gb.id
     `
 
-    db.all(query,function(error,guestbook){
-        callback(error,guestbook)
+    db.all(query, function (error, guestbook) {
+        callback(error, guestbook)
     })
 }
 
-exports.deleteCommentFromGuestbook = function(id,callback){
-    
+exports.deleteCommentFromGuestbook = function (id, callback) {
+
     const query = `DELETE FROM  guestbook WHERE id = ?`
     const values = [id];
-    db.run(query,values,function(error){
+    db.run(query, values, function (error) {
         callback(error)
     })
 }
 
-exports.createGuestbookReply = function(commentId,reply,callback){
-    
+exports.createGuestbookReply = function (commentId, reply, callback) {
+
     const query = `INSERT INTO guestbook_replies(reply,guestbookId) VALUES(?,?)`
-    const values = [reply,commentId];
-    db.run(query,values,function(error){
+    const values = [reply, commentId];
+    db.run(query, values, function (error) {
         callback(error)
     })
 }
 
-exports.updateGuestbookReply = function(newReply,id, callback){
+exports.updateGuestbookReply = function (newReply, id, callback) {
     const query = "UPDATE guestbook_replies SET reply = ? WHERE guestbookId = ?"
-    const values = [newReply,id]
-    db.run(query,values,function(error){
+    const values = [newReply, id]
+    db.run(query, values, function (error) {
         callback(error)
     })
 }
 
-exports.getGuestbookReplyById = function(id,callback){
-    
+exports.getGuestbookReplyById = function (id, callback) {
+
     const query = `SELECT guestbook_replies.reply 
     FROM guestbook_replies 
     WHERE guestbookId = ?`
     const values = [id]
 
-    db.get(query,values,function(error,reply){
-        callback(error,reply)
+    db.get(query, values, function (error, reply) {
+        callback(error, reply)
     })
+}
+exports.deleteGuestbookReplyById = function (id, callback) {
+
+    const query = `DELETE FROM  guestbook_replies WHERE replyId = ?`
+    const values = [id];
+    db.run(query, values, function (error) {
+        callback(error)
+    })
+}
+
+
+/*---------- Portfolio section starts ----------*/
+/*--------------------------------------------- */
+
+
+/*****************Portfolio table ****************/
+
+db.run(`
+	CREATE TABLE IF NOT EXISTS project (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT,
+        content TEXT
+	)
+`)
+/*************************************************/
+
+exports.createPortfolioProject = function (title, content, callback) {
+
+    const query = "INSERT INTO project(title,content) VALUES(?,?)"
+    const values = [title, content]
+
+    db.run(query, values, function (error) {
+        const id = this.lastID
+        callback(error, id)
+    })
+}
+exports.getPortfolioProjectById = function (id, callback) {
+
+    const values = [id]
+    const query = `SELECT * FROM project WHERE id = ?`
+
+    db.get(query, values, function (error, project) {
+        callback(error, project)
+    })
+}
+
+exports.getAllProjectsIdAndTitle = function (callback) {
+
+    const query = "SELECT id,title FROM project"
+
+    db.all(query, function (error, projectIdAndTitle) {
+        callback(error, projectIdAndTitle)
+    })
+
 }

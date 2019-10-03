@@ -1,4 +1,4 @@
-<h2 class="text-center text-bold">Create portfolio project </h2>
+<h1 class="text-center text-bold">Create portfolio project </h1>
 {{#if somethingWentWrong}}
 <p>external error</p>
 {{else}}
@@ -11,21 +11,19 @@
 </ul>
 {{/if}}
 
-
 <div class="container">
     <div class="columns">
         <div class="column col-2"></div>
         <div class="form-group column col-8">
-            <form action="/blog" method="POST">
+            <form action="/portfolio/" method="POST">
                 <label class="form-label">Title</label>
-                <input class="form-input" type="text" name="title" value="{{title}}" placeholder="enter title ">
+                <input class="form-input" type="text" name="title" value="{{projectTitle}}" placeholder="enter title ">
                 <label class="form-label">content</label>
-                <textarea class="form-input" placeholder="enter content" name="content" rows="3">{{content}}</textarea>
+                <textarea class="form-input" placeholder="enter content" name="content" rows="3">{{projectContent}}</textarea>
                 <button class="btn btn-primary" value="create post">submit</button>
             </form>
         </div>
         <div class="column col-2"></div>
     </div>
 </div>
-
 {{/if}}

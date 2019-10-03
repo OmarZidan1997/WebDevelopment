@@ -1,6 +1,8 @@
+<h1 class="text-center text-bold">Guestbook</h1>
 {{#if somethingWentWrong}}
     <p class="text-break">internal error</p>
 {{else}}
+    <div class="container">
     {{#if validationErrors.length}}
         <p>Errors:</p>
         <ul>
@@ -9,7 +11,6 @@
             {{/each}}
         </ul>
     {{/if}}
-    <div class="container"> 
         <form class="form-horizontal col-12" action="/guestbook/" method="POST">
             <div class="form-group">
                 <div class="col-5 col-sm-12">
@@ -63,11 +64,11 @@
                                 </td>
                                 <td>
                                     {{#if reply}}
-                                    <form action="" class="d-inline-block">
+                                    <form action="/guestbook/deleteReplyComment/{{replyId}}" class="d-inline-block" method="POST">
                                         <button>Delete Reply</button>
                                     </form>
                                     <form action="/guestbook/editReplyComment/{{id}}" class="d-inline-block" method="GET">
-                                        <button>EDIT Reply</button>
+                                        <button>Edit Reply</button>
                                     </form>
                                     {{/if}}
                                 </td>

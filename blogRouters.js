@@ -4,7 +4,7 @@ const db = require('./db')
 const router = express.Router()
 
 // Get all posts
-router.get('/', function (request, response) {
+router.get("/", function (request, response) {
   db.getAllBlogPosts(function (error, blogPosts) {
     var model = {}
     if (error) {
@@ -92,7 +92,6 @@ router.get("/:id", function (request, response) {
 
     response.render("blog-post.hbs", model)
   })
-
 
 })
 

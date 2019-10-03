@@ -3,6 +3,7 @@ const expressHandlebars = require('express-handlebars')
 const bodyParser = require('body-parser')
 const blogRouter = require('./blogRouters')
 const guestbookRouter = require('./guestbookRouter')
+const portfolioRouter = require('./portfolioRouter')
 const db = require('./db')
 
 const app = express()
@@ -34,10 +35,11 @@ app.use("/blog",blogRouter)
 app.use("/guestbook",guestbookRouter)
 //------------------------------//
 
+//------------------------------//
+app.use("/portfolio",portfolioRouter)
+//------------------------------//
 
-app.get('/portfolio', function (request, response) {
-  response.render("portfolio.hbs")
-})
+
 
 
 

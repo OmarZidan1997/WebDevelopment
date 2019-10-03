@@ -16,10 +16,6 @@ html,body{
     background-color: #8693AB;
 }
 
-.navbar-center a:hover{
-    background-color: black !important;
-}
-
 footer{
     background-color: #546A7B; 
     position: fixed;
@@ -29,6 +25,10 @@ footer{
 .off-canvas .off-canvas-sidebar{
     background-color:  #6290C8 !important;
     min-height: 100vh;
+}
+
+.off-canvas-content{
+    padding-right: 80px !important;
 }
 
 #sidebar-left a{
@@ -41,5 +41,8 @@ footer{
 }
  .column{
     padding: 0.8rem;
+}
+h1{
+    padding: 0.4rem;
 }
 /**** guestbook ****/
