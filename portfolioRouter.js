@@ -61,7 +61,7 @@ router.post('/', function (request, response) {
 })
 
 
-router.get('/createproject', function (request, response) {
+router.get('/create-project', function (request, response) {
     response.render("create-portfolio-project.hbs")
 })
 
@@ -90,6 +90,23 @@ router.get("/project/:id", function (request, response) {
     })
 
 })
+
+router.post('/project/:id/delete', function (request, response) {
+    const id = parseInt(request.params.id)
+
+    db.deleteProjectById(id, function (error) {
+        if (error) {
+            // do something with errors
+        }
+        else {
+
+            response.redirect("/portfolio")
+
+        }
+    })
+
+})
+
 
 
 

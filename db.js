@@ -7,37 +7,40 @@ db.run("PRAGMA foreign_keys = ON")
 /*----------Blog--------------- */
 /*------------------------------*/
 db.run(`
-	CREATE TABLE IF NOT EXISTS blogPosts (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
+	CREATE TABLE IF NOT EXISTS blogPost (
+		id INTEGER PRIMARY KEY,
         title TEXT,
         content TEXT
 	)
 `)
 db.run(`
-	CREATE TABLE IF NOT EXISTS blogPostComments (
-		commentid INTEGER PRIMARY KEY AUTOINCREMENT,
+	CREATE TABLE IF NOT EXISTS blogPostComment (
+		commentid INTEGER PRIMARY KEY,
 		name TEXT,
 		comment TEXT,
         blogId INTEGER,
         CONSTRAINT blogId
-            FOREIGN KEY (blogId) REFERENCES blogPosts(id)
+            FOREIGN KEY (blogId) REFERENCES blogPost(id)
             ON DELETE CASCADE
 	)
 `)
 
-exports.getAllBlogPosts = function (callback) {
+exports.getAllBlogPosts = function (postPerPage,offset,callback) {
 
-    const query = "SELECT * FROM blogPosts"
+    const query = `SELECT COUNT(*) OVER() AS nrOfPosts,* 
+    FROM blogPost
+    Limit 4 
+    OFFSET 0`
 
     db.all(query, function (error, blogPosts) {
-        callback(error, blogPosts)
+        callback(blogPosts, error)
     })
 
 }
 
 exports.createBlogPost = function (title, content, callback) {
 
-    const query = "INSERT INTO blogPosts(title,content) VALUES(?,?)"
+    const query = "INSERT INTO blogPost(title,content) VALUES(?,?)"
     const values = [title, content]
 
     db.run(query, values, function (error) {
@@ -49,7 +52,7 @@ exports.createBlogPost = function (title, content, callback) {
 exports.getBlogPostById = function (id, callback) {
 
     const values = [id]
-    const query = `SELECT * FROM blogPosts WHERE id = ?`
+    const query = `SELECT * FROM blogPost WHERE id = ?`
 
     db.get(query, values, function (error, blogPost) {
         callback(error, blogPost)
@@ -61,8 +64,8 @@ exports.getBlogPostAndCommentsById = function (id, callback) {
     const values = [id]
     const query = `
     SELECT bp.id,bp.title,bp.content,bpc.commentid,bpc.name,bpc.comment
-    FROM blogPosts as bp
-    LEFT JOIN blogPostComments as bpc 
+    FROM blogPost as bp
+    LEFT JOIN blogPostComment as bpc 
     ON bpc.blogId = bp.id
     WHERE bp.id = ?
     `
@@ -73,7 +76,7 @@ exports.getBlogPostAndCommentsById = function (id, callback) {
 }
 
 exports.updateBlogPostById = function (newTitle, newContent, id, callback) {
-    const query = "UPDATE blogPosts SET title = ?, content = ? WHERE id = ?"
+    const query = "UPDATE blogPost SET title = ?, content = ? WHERE id = ?"
     const values = [newTitle, newContent, id]
     db.run(query, values, function (error) {
         callback(error)
@@ -82,7 +85,7 @@ exports.updateBlogPostById = function (newTitle, newContent, id, callback) {
 
 exports.deleteBlogPostById = function (id, callback) {
 
-    const query = "DELETE FROM blogPosts WHERE id = ?"
+    const query = "DELETE FROM blogPost WHERE id = ?"
     const values = [id]
 
     db.run(query, values, function (error) {
@@ -97,7 +100,7 @@ exports.deleteBlogPostById = function (id, callback) {
 
 exports.createBlogPostComment = function (name, comment, blogId, callback) {
 
-    const query = "INSERT INTO blogPostComments (name,comment,blogId) VALUES (?,?,?)"
+    const query = "INSERT INTO blogPostComment (name,comment,blogId) VALUES (?,?,?)"
     const values = [name, comment, blogId]
 
     db.run(query, values, function (error) {
@@ -107,7 +110,7 @@ exports.createBlogPostComment = function (name, comment, blogId, callback) {
 
 exports.deleteBlogPostCommentById = function (commentId, callback) {
 
-    const query = "DELETE FROM blogPostComments WHERE commentId = ?"
+    const query = "DELETE FROM blogPostComment WHERE commentId = ?"
     const values = [commentId]
     db.run(query, values, function (error) {
         callback(error)
@@ -122,7 +125,7 @@ exports.deleteBlogPostCommentById = function (commentId, callback) {
 /*--------- Admin Table-------*/
 db.run(`
 	CREATE TABLE IF NOT EXISTS admin (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		id INTEGER PRIMARY KEY,
         name TEXT,
         username TEXT,
         password TEXT
@@ -133,7 +136,7 @@ db.run(`
 /*--------- Guestbook table-------*/
 db.run(`
 	CREATE TABLE IF NOT EXISTS guestbook (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		id INTEGER PRIMARY KEY,
         name TEXT,
         comment TEXT
 	)
@@ -143,8 +146,8 @@ db.run(`
 
 /*--------- guestbookReplies-------*/
 db.run(`
-	CREATE TABLE IF NOT EXISTS guestbook_replies (
-		replyId INTEGER PRIMARY KEY AUTOINCREMENT,
+	CREATE TABLE IF NOT EXISTS guestbookReply (
+		replyId INTEGER PRIMARY KEY,
         reply TEXT,
         guestbookId INTEGER,
         CONSTRAINT guestbookId
@@ -169,7 +172,7 @@ exports.getAllGuestbookComments = function (callback) {
     const query = `
     SELECT gb.id,gb.name,gb.comment,gbr.replyId,gbr.reply
     FROM guestbook as gb
-    LEFT JOIN guestbook_replies as gbr 
+    LEFT JOIN guestbookReply as gbr 
     ON gbr.guestbookId = gb.id
     `
 
@@ -189,7 +192,7 @@ exports.deleteCommentFromGuestbook = function (id, callback) {
 
 exports.createGuestbookReply = function (commentId, reply, callback) {
 
-    const query = `INSERT INTO guestbook_replies(reply,guestbookId) VALUES(?,?)`
+    const query = `INSERT INTO guestbookReply(reply,guestbookId) VALUES(?,?)`
     const values = [reply, commentId];
     db.run(query, values, function (error) {
         callback(error)
@@ -197,7 +200,7 @@ exports.createGuestbookReply = function (commentId, reply, callback) {
 }
 
 exports.updateGuestbookReply = function (newReply, id, callback) {
-    const query = "UPDATE guestbook_replies SET reply = ? WHERE guestbookId = ?"
+    const query = "UPDATE guestbookReply SET reply = ? WHERE guestbookId = ?"
     const values = [newReply, id]
     db.run(query, values, function (error) {
         callback(error)
@@ -206,8 +209,9 @@ exports.updateGuestbookReply = function (newReply, id, callback) {
 
 exports.getGuestbookReplyById = function (id, callback) {
 
-    const query = `SELECT guestbook_replies.reply 
-    FROM guestbook_replies 
+    const query = `
+    SELECT reply
+    FROM guestbookReply 
     WHERE guestbookId = ?`
     const values = [id]
 
@@ -217,7 +221,7 @@ exports.getGuestbookReplyById = function (id, callback) {
 }
 exports.deleteGuestbookReplyById = function (id, callback) {
 
-    const query = `DELETE FROM  guestbook_replies WHERE replyId = ?`
+    const query = `DELETE FROM  guestbookReply WHERE replyId = ?`
     const values = [id];
     db.run(query, values, function (error) {
         callback(error)
@@ -233,7 +237,7 @@ exports.deleteGuestbookReplyById = function (id, callback) {
 
 db.run(`
 	CREATE TABLE IF NOT EXISTS project (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		id INTEGER PRIMARY KEY,
         title TEXT,
         content TEXT
 	)
@@ -267,5 +271,14 @@ exports.getAllProjectsIdAndTitle = function (callback) {
     db.all(query, function (error, projectIdAndTitle) {
         callback(error, projectIdAndTitle)
     })
+}
 
+exports.deleteProjectById = function (id, callback) {
+
+    const query = "DELETE FROM project WHERE id = ?"
+    const values = [id]
+
+    db.run(query, values, function (error) {
+        callback(error)
+    })
 }

@@ -4,8 +4,22 @@ const db = require('./db')
 const router = express.Router()
 
 // Get all posts
-router.get("/", function (request, response) {
-  db.getAllBlogPosts(function (error, blogPosts) {
+
+router.get('/create-blog-post', function (request, response) {
+  response.render("create-blog-post.hbs")
+})
+
+router.get("/:page", function (request, response) {
+  var postPerPage = 4;
+  var previous = currentPage = request.params.page - 1 
+  var offset = postPerPage * (currentPage - 1)
+
+  if(previous >= 0){
+    currentPage++
+  }
+
+
+  db.getAllBlogPosts(postPerPage,currentPage,function(blogPosts,error) {
     var model = {}
     if (error) {
       model = {
@@ -13,12 +27,14 @@ router.get("/", function (request, response) {
       }
     } else {
       model = {
+        currentPage,
         blogPosts: blogPosts,
         somethingWentWrong: false
       }
     }
     response.render("blog.hbs", model)
   })
+
 })
 // Create a blog post 
 router.post("/", function (request, response) {
@@ -49,7 +65,7 @@ router.post("/", function (request, response) {
       }
       else {
 
-        response.redirect("/blog/" + id)
+        response.redirect("/blog/post/" + id)
       }
 
     })
@@ -66,13 +82,10 @@ router.post("/", function (request, response) {
 })
 
 
-router.get('/create-blog-post', function (request, response) {
-  response.render("create-blog-post.hbs")
-})
 
 
 // get a specific blog post by ID
-router.get("/:id", function (request, response) {
+router.get("/post/:id", function (request, response) {
 
   const id = parseInt(request.params.id) //converts the id from string to int
   var model = {}
@@ -102,13 +115,13 @@ router.post("/delete-blog-post/:id", function (request, response) {
   const id = parseInt(request.params.id)
 
   db.deleteBlogPostById(id, function (error) {
-    response.redirect("/blog")
+    response.redirect("/blog/1")
   })
 
 })
 
 // shows the form to edit a specific post 
-router.get("/edit-blog-post/:id", function (request, response) {
+router.get("/post/:id/edit", function (request, response) {
 
   const id = parseInt(request.params.id)
   var model = {}
@@ -135,7 +148,7 @@ router.get("/edit-blog-post/:id", function (request, response) {
 
 })
 
-router.post("/edit-blog-post/:id", function (request, response) {
+router.post("/post/:id/edit", function (request, response) {
 
   const id = parseInt(request.params.id)
   const title = request.body.title
@@ -160,7 +173,7 @@ router.post("/edit-blog-post/:id", function (request, response) {
         }
         response.render("create-blog-post.hbs", model)
       } else {
-        response.redirect("/blog")
+        response.redirect("/blog/1")
       }
 
     })
@@ -191,7 +204,7 @@ router.post("/edit-blog-post/:id", function (request, response) {
 })
 
 
-router.post("/:id/createcomment", function (request, response) {
+router.post("/post/:id/createcomment", function (request, response) {
 
   const blogId = parseInt(request.params.id)
   const name = request.body.name
@@ -218,7 +231,7 @@ router.post("/:id/createcomment", function (request, response) {
       }
       else {
 
-        response.redirect("/blog/" + blogId)
+        response.redirect("/blog/post/" + blogId)
       }
 
     })
@@ -254,7 +267,7 @@ router.post("/:id/createcomment", function (request, response) {
 
 
 
-router.post("/:id/deletecomment/:commentId", function (request, response) {
+router.post("/post/:id/deletecomment/:commentId", function (request, response) {
 
   const commentId = parseInt(request.params.commentId)
   const blogId = parseInt(request.params.id)
@@ -271,7 +284,7 @@ router.post("/:id/deletecomment/:commentId", function (request, response) {
     }
     else {
 
-      response.redirect("/blog/" + blogId)
+      response.redirect("/blog/post/" + blogId)
     }
 
   })

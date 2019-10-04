@@ -79,26 +79,15 @@ router.post('/', function (request, response) {
 })
 
 
-// delete comment from guestbook
-router.post("/deletecomment/:id", function (request, response) {
-
-    const id = parseInt(request.params.id)
-
-    db.deleteCommentFromGuestbook(id, function (error) {
-        response.redirect("/guestbook/")
-    })
-})
-
-
 //gets reply form
-router.get("/createReplyComment/:id", function (request, response) {
+router.get("/comment/:id/reply", function (request, response) {
     const guestbookId = parseInt(request.params.id);
     const model = { guestbookId }
     response.render("guestbook-reply.hbs", model)
 })
 
 
-router.post("/createReplyComment/:id", function (request, response) {
+router.post("/comment/:id/reply", function (request, response) {
     const guestbookId = parseInt(request.params.id)
     const reply = request.body.reply
     var model = {}
@@ -135,7 +124,7 @@ router.post("/createReplyComment/:id", function (request, response) {
 
 })
 
-router.get("/editReplyComment/:id", function (request, response) {
+router.get("/comment/:id/editReply", function (request, response) {
     const guestbookId = parseInt(request.params.id);
     var model = {}
     db.getGuestbookReplyById(guestbookId, function (error, reply) {
@@ -159,7 +148,7 @@ router.get("/editReplyComment/:id", function (request, response) {
 
 })
 
-router.post("/editReplyComment/:id", function (request, response) {
+router.post("/comment/:id/editReply", function (request, response) {
 
     const id = parseInt(request.params.id)
     const newReply = request.body.reply
@@ -180,7 +169,7 @@ router.post("/editReplyComment/:id", function (request, response) {
                 }
                 response.render("edit-guestbook-reply.hbs", model)
             } else {
-                response.redirect("/guestbook")
+                response.redirect("/guestbook/")
             }
 
         })
@@ -225,4 +214,16 @@ router.post("/deleteReplyComment/:replyId", function (request, response) {
     })
   
   })
+
+  
+// delete comment from guestbook
+router.post("/comment/:id/delete", function (request, response) {
+
+    const id = parseInt(request.params.id)
+
+    db.deleteCommentFromGuestbook(id, function (error) {
+        response.redirect("/guestbook/")
+    })
+})
+
 module.exports = router

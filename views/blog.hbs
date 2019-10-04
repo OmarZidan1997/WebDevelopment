@@ -4,6 +4,22 @@
     {{else}}
     {{#if blogPosts}}
     <div class="container">
+        <div clas="columns">
+            <div class="column col-12">
+                <ul class="pagination">
+                    <li class="page-item page-prev">
+                        <a href="/blog/1">
+                            <div class="page-item-subtitle bg-dark text-gray  p-1 rounded">Previous</div>
+                        </a>
+                    </li>
+                    <li class="page-item page-next">
+                        <a href="#">
+                            <div class="page-item-subtitle bg-dark text-gray p-1 rounded">Next</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
         <div class="columns">
             {{#each blogPosts}}
             <div class="column col-12 col-xs-12 ">
@@ -15,15 +31,15 @@
                         <div class="card-title h6 text-break">{{title}}</div>
                     </div>
                     <div class="card-footer">
-                        <form action="/blog/{{id}}" class="d-inline-block">
+                        <form action="/blog/post/{{id}}" class="d-inline-block">
                             <button class="btn btn-primary d-inline-block">visit</button>
+                        </form>
+                        <form class="d-inline-block" action="/blog/post/{{id}}/edit" class="d-inline-block"
+                            method="GET">
+                            <button class="btn btn-error">Edit</button>
                         </form>
                         <form action="/blog/delete-blog-post/{{id}}" class="d-inline-block" method="POST">
                             <button class="btn btn-error">delete</button>
-                        </form>
-                        <form class="d-inline-block" action="/blog/edit-blog-post/{{id}}" class="d-inline-block"
-                            method="GET">
-                            <button class="btn btn-error">Edit</button>
                         </form>
                     </div>
                 </div>

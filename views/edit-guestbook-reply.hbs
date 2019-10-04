@@ -9,7 +9,7 @@
     {{/each}}
 </ul>
 {{/if}}
-<form action="/guestbook/editReplyComment/{{guestbookId}}" method="POST">
+<form action="/guestbook/comment/{{guestbookId}}/editReply" method="POST">
     <div class="form-group">
         <label class="form-label" for="input-example-3">Message</label>
         <textarea class="form-input" id="input-example-3" name="reply" placeholder="enter a reply message" rows="3">{{reply.reply}}</textarea>

@@ -16,7 +16,7 @@
         {{/if}}
         <div class="columns">
             <div class="column col-6 col-xs-12">
-                <form action="/blog/{{blogPost.0.id}}/createcomment" method="POST">
+                <form action="/blog/post/{{blogPost.0.id}}/createcomment" method="POST">
                     <div class="form-group">
                         <input class="form-input" type="text" name="name" value="{{name}}" placeholder="Name">
                         <input class="form-input" type="text" name="comment" value="{{comment}}"placeholder="comment">
@@ -42,7 +42,7 @@
                                 <div class="tile-content">
                                     <p class="tile-title text-bold text-break">name: {{name}}</p>
                                     <p class="tile-subtitle text-break"> comment: {{comment}}</p>
-                                    <form action="/blog/{{id}}/deletecomment/{{commentid}}" method="POST">
+                                    <form action="/blog/post/{{id}}/deletecomment/{{commentid}}" method="POST">
                                         <button class="btn btn-primary">Delete</button>
                                     </form>
                                 </div>

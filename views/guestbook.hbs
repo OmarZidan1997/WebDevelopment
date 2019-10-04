@@ -46,11 +46,11 @@
                                 <td><span class="text-dark text-break">{{comment}}</span></td>
                                 <td>2019-09-29</td>
                                 <td>
-                                    <form class="d-inline-block" action="/guestbook/deletecomment/{{id}}" method="POST">
+                                    <form class="d-inline-block" action="/guestbook/comment/{{id}}/delete" method="POST">
                                         <button>Delete comment</button>
                                     </form>
                                     {{#unless reply}}
-                                    <form class="d-inline-block"action="/guestbook/createReplyComment/{{id}}" method="GET">
+                                    <form class="d-inline-block"action="/guestbook/comment/{{id}}/reply" method="GET">
                                         <button>reply comment</button>
                                     </form>
                                     {{/unless}}
@@ -67,7 +67,7 @@
                                     <form action="/guestbook/deleteReplyComment/{{replyId}}" class="d-inline-block" method="POST">
                                         <button>Delete Reply</button>
                                     </form>
-                                    <form action="/guestbook/editReplyComment/{{id}}" class="d-inline-block" method="GET">
+                                    <form action="/guestbook/comment/{{id}}/editReply" class="d-inline-block" method="GET">
                                         <button>Edit Reply</button>
                                     </form>
                                     {{/if}}
