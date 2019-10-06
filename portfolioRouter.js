@@ -5,7 +5,7 @@ const router = express.Router()
 
 
 router.get("/", function (request, response) {
-    db.getAllProjectsIdAndTitle(function (error, projectIdAndTitle) {
+    db.getAllProjects(function (error, project) {
         var model = {}
         if (error) {
             model = {
@@ -14,7 +14,7 @@ router.get("/", function (request, response) {
         }
         else {
             model = {
-                projectIdAndTitle,
+                project,
                 somethingWentWrong: false
             }
         }
@@ -108,7 +108,26 @@ router.post('/project/:id/delete', function (request, response) {
 })
 
 
+router.get('/search-project', function (request, response) {
 
-
+    const projectsToSearch = request.body.searchValue
+    console.log("wwww  ",projectsToSearch)
+    db.searchForProjects(projectsToSearch, function (error, project) {
+        if (error) {
+            const model = {
+                somethingWentWrong: true
+            }
+            response.render("portfolio.hbs", model)
+        }
+        else{
+            console.table(project)
+            const model = {
+                somethingWentWrong: false,
+                project
+            }
+            response.render("portfolio.hbs",model)
+        }
+    })
+})
 
 module.exports = router

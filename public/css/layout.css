@@ -7,11 +7,12 @@ html,body{
     color: gainsboro;
     box-sizing: border-box;
     margin-bottom: 20px;
+    height: 100vh;
 }
-
+/* 
 #header-main{
     width: 100%;
-}
+} */
 .navbar{
     background-color: #8693AB;
 }

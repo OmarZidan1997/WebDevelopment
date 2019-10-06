@@ -31,7 +31,6 @@ router.post('/', function (request, response) {
     const message = request.body.message
     var model = {}
     const validationErrors = []
-
     if (name == null || name.trim() == "") {
         validationErrors.push("Must enter title")
     }

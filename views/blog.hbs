@@ -2,7 +2,7 @@
     {{#if somethingWentWrong}}
     <p>internal error</p>
     {{else}}
-    {{#if blogPosts}}
+    {{#if blogPost}}
     <div class="container">
         <div clas="columns">
             <ul class="pagination bg-dark">
@@ -20,7 +20,7 @@
                     <a href="/blog/{{this}}">{{this}}</a>
                 </li>
                 {{/each}}
-                
+
                 {{#if nextPage}}
                 <li class="page-item ">
                     <a href="/blog/{{nextPage}}" tabindex="-1">Next</a>
@@ -33,26 +33,25 @@
             </ul>
         </div>
         <div class="columns">
-            {{#each blogPosts}}
-            <div class="column col-12 col-xs-12 ">
+            {{#each blogPost}}
+            <div class="column col-12 ">
                 <div class="card bg-dark">
-                    <div class="card-header p-centered hide-md p-1">
-                        <div class="card-title h5 text-break">{{title}}</div>
-                    </div>
-                    <div class="card-header p-centered show-md p-1">
+                    <div class="card-header p-centered ">
                         <div class="card-title h6 text-break">{{title}}</div>
                     </div>
                     <div class="card-footer">
-                        <form action="/blog/post/{{id}}" class="d-inline-block">
-                            <button class="btn btn-primary d-inline-block">visit</button>
-                        </form>
-                        <form class="d-inline-block" action="/blog/post/{{id}}/edit" class="d-inline-block"
-                            method="GET">
-                            <button class="btn btn-error">Edit</button>
-                        </form>
-                        <form action="/blog/delete-blog-post/{{id}}" class="d-inline-block" method="POST">
-                            <button class="btn btn-error">delete</button>
-                        </form>
+                        <div class="form-group">
+                            <form action="/blog/post/{{id}}" class="d-inline-block col-sm-12">
+                                <button class="btn btn-primary d-inline-block">visit</button>
+                            </form>
+                            <form class="d-inline-block" action="/blog/post/{{id}}/edit" class="d-inline-block col-sm-12"
+                                method="GET">
+                                <button class="btn btn-error">Edit</button>
+                            </form>
+                            <form action="/blog/delete-blog-post/{{id}}" class="d-inline-block col-sm-12" method="POST">
+                                <button class="btn btn-error">delete</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -60,7 +59,7 @@
         </div>
     </div>
     {{else}}
-    <p>Sorry There are no blogposts</p>
+    <p>Sorry There are no blogPost</p>
     {{/if}}
     {{/if}}
     <a href="/blog/create-blog-post">

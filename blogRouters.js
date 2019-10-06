@@ -28,7 +28,7 @@ router.get("/:pageNr", function (request, response) {
   }
 
 
-  db.getAllBlogPosts(postPerPage, offset, function (blogPosts, error) {
+  db.getBlogPostsForEachPage(postPerPage, offset, function (blogPost, error) {
 
     if (error) {
       const model = {
@@ -42,8 +42,8 @@ router.get("/:pageNr", function (request, response) {
       var nrOfPagesInBlog;
       var nextPage = 0;
       const page = []
-      if (blogPosts.length > 0) {
-        nrOfPagesInBlog = Math.ceil(blogPosts[0].nrOfPosts / postPerPage)
+      if (blogPost.length > 0) {
+        nrOfPagesInBlog = Math.ceil(blogPost[0].nrOfPosts / postPerPage) // nrOfPosts is the total amount of posts in db.
 
         for (var i = 1; i <= nrOfPagesInBlog; i++) {
           page.push(i)
@@ -54,10 +54,9 @@ router.get("/:pageNr", function (request, response) {
         }
 
       }
-      console.table(page)
       const model = {
 
-        blogPosts: blogPosts,
+        blogPost,
         previousPage,
         currentPage,
         nextPage,

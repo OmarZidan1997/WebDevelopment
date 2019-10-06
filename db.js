@@ -25,7 +25,7 @@ db.run(`
 	)
 `)
 
-exports.getAllBlogPosts = function (postPerPage,offset,callback) {
+exports.getBlogPostsForEachPage = function (postPerPage,offset,callback) {
 
     const query = `SELECT COUNT(*) OVER() AS nrOfPosts,* 
     FROM blogPost
@@ -266,9 +266,9 @@ exports.getPortfolioProjectById = function (id, callback) {
     })
 }
 
-exports.getAllProjectsIdAndTitle = function (callback) {
+exports.getAllProjects = function (callback) {
 
-    const query = "SELECT id,title FROM project"
+    const query = "SELECT * FROM project"
 
     db.all(query, function (error, projectIdAndTitle) {
         callback(error, projectIdAndTitle)
@@ -282,5 +282,20 @@ exports.deleteProjectById = function (id, callback) {
 
     db.run(query, values, function (error) {
         callback(error)
+    })
+}
+
+exports.searchForProjects = function (projectsToSearch, callback) {
+
+    const query = `
+    SELECT * 
+    FROM project 
+    WHERE title LIKE ? 
+    OR
+    content LIKE ?`
+    const values = ["%"+ projectsToSearch + "%", "%"+ projectsToSearch + "%" ]
+
+    db.all(query, values, function (error,project) {
+        callback(error,project)
     })
 }
