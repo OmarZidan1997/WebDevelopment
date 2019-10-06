@@ -29,10 +29,12 @@ exports.getAllBlogPosts = function (postPerPage,offset,callback) {
 
     const query = `SELECT COUNT(*) OVER() AS nrOfPosts,* 
     FROM blogPost
-    Limit 4 
-    OFFSET 0`
+    Limit ? 
+    OFFSET ?`
 
-    db.all(query, function (error, blogPosts) {
+    const values = [postPerPage,offset]
+
+    db.all(query, values,function (error, blogPosts) {
         callback(blogPosts, error)
     })
 

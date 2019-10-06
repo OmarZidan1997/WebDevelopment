@@ -1,24 +1,36 @@
 <h1 class="text-center text-bold">All Blog Posts</h2>
     {{#if somethingWentWrong}}
-    <p>external error</p>
+    <p>internal error</p>
     {{else}}
     {{#if blogPosts}}
     <div class="container">
         <div clas="columns">
-            <div class="column col-12">
-                <ul class="pagination">
-                    <li class="page-item page-prev">
-                        <a href="/blog/1">
-                            <div class="page-item-subtitle bg-dark text-gray  p-1 rounded">Previous</div>
-                        </a>
-                    </li>
-                    <li class="page-item page-next">
-                        <a href="#">
-                            <div class="page-item-subtitle bg-dark text-gray p-1 rounded">Next</div>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            <ul class="pagination bg-dark">
+                {{#if previousPage}}
+                <li class="page-item ">
+                    <a href="/blog/{{previousPage}}" tabindex="-1">Previous</a>
+                </li>
+                {{else}}
+                <li class="page-item disabled">
+                    <a href="#">Previous</a>
+                </li>
+                {{/if}}
+                {{#each page}}
+                <li class="page-item">
+                    <a href="/blog/{{this}}">{{this}}</a>
+                </li>
+                {{/each}}
+                
+                {{#if nextPage}}
+                <li class="page-item ">
+                    <a href="/blog/{{nextPage}}" tabindex="-1">Next</a>
+                </li>
+                {{else}}
+                <li class="page-item disabled">
+                    <a href="#">Next</a>
+                </li>
+                {{/if}}
+            </ul>
         </div>
         <div class="columns">
             {{#each blogPosts}}

@@ -9,30 +9,65 @@ router.get('/create-blog-post', function (request, response) {
   response.render("create-blog-post.hbs")
 })
 
-router.get("/:page", function (request, response) {
-  var postPerPage = 4;
-  var previous = currentPage = request.params.page - 1 
-  var offset = postPerPage * (currentPage - 1)
+router.get("/:pageNr", function (request, response) {
 
-  if(previous >= 0){
-    currentPage++
+  var postPerPage = 4;
+  var currentPage = parseInt(request.params.pageNr)
+  var previousPage = currentPage
+  var offset = postPerPage * (currentPage - 1)
+  var firstPage = 1
+
+  if (currentPage > firstPage) {
+    previousPage--
+  }
+  else if (currentPage < firstPage) {
+    return response.redirect("/blog/" + firstPage)
+  }
+  else {
+    previousPage = 0;
   }
 
 
-  db.getAllBlogPosts(postPerPage,currentPage,function(blogPosts,error) {
-    var model = {}
+  db.getAllBlogPosts(postPerPage, offset, function (blogPosts, error) {
+
     if (error) {
-      model = {
+      const model = {
         somethingWentWrong: true
       }
-    } else {
-      model = {
-        currentPage,
+
+      response.render("blog.hbs", model)
+    }
+    else {
+
+      var nrOfPagesInBlog;
+      var nextPage = 0;
+      const page = []
+      if (blogPosts.length > 0) {
+        nrOfPagesInBlog = Math.ceil(blogPosts[0].nrOfPosts / postPerPage)
+
+        for (var i = 1; i <= nrOfPagesInBlog; i++) {
+          page.push(i)
+        }
+
+        if (currentPage < nrOfPagesInBlog) {
+          nextPage = currentPage + 1
+        }
+
+      }
+      console.table(page)
+      const model = {
+
         blogPosts: blogPosts,
+        previousPage,
+        currentPage,
+        nextPage,
+        page,
         somethingWentWrong: false
       }
+
+      response.render("blog.hbs", model)
     }
-    response.render("blog.hbs", model)
+
   })
 
 })
