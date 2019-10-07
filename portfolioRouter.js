@@ -110,8 +110,7 @@ router.post('/project/:id/delete', function (request, response) {
 
 router.get('/search-project', function (request, response) {
 
-    const projectsToSearch = request.body.searchValue
-    console.log("wwww  ",projectsToSearch)
+    const projectsToSearch = request.query.searchInput
     db.searchForProjects(projectsToSearch, function (error, project) {
         if (error) {
             const model = {
@@ -120,7 +119,6 @@ router.get('/search-project', function (request, response) {
             response.render("portfolio.hbs", model)
         }
         else{
-            console.table(project)
             const model = {
                 somethingWentWrong: false,
                 project

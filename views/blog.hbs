@@ -41,14 +41,14 @@
                     </div>
                     <div class="card-footer">
                         <div class="form-group">
-                            <form action="/blog/post/{{id}}" class="d-inline-block col-sm-12">
+                            <form action="/blog/post/{{id}}" class="d-inline-block">
                                 <button class="btn btn-primary d-inline-block">visit</button>
                             </form>
-                            <form class="d-inline-block" action="/blog/post/{{id}}/edit" class="d-inline-block col-sm-12"
+                            <form class="d-inline-block" action="/blog/post/{{id}}/edit" class="d-inline-block"
                                 method="GET">
                                 <button class="btn btn-error">Edit</button>
                             </form>
-                            <form action="/blog/delete-blog-post/{{id}}" class="d-inline-block col-sm-12" method="POST">
+                            <form action="/blog/delete-blog-post/{{id}}" class="d-inline-block" method="POST">
                                 <button class="btn btn-error">delete</button>
                             </form>
                         </div>

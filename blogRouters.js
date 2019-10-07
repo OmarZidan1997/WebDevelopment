@@ -14,8 +14,8 @@ router.get("/:pageNr", function (request, response) {
   var postPerPage = 4;
   var currentPage = parseInt(request.params.pageNr)
   var previousPage = currentPage
-  var offset = postPerPage * (currentPage - 1)
   var firstPage = 1
+  var offset = postPerPage * (currentPage - firstPage)
 
   if (currentPage > firstPage) {
     previousPage--

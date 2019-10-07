@@ -10,7 +10,7 @@
     <div class="columns">
         <div class="column">
             <form action="/portfolio/search-project">
-                <div class="input-group input-inline col-12">
+                <div class="input-group input-inline col-6 col-sm-12 col-lg-6">
                     <input class="form-input" type="text" name="searchInput"  placeholder="search for a project">
                     <button class="btn btn-primary input-group-btn" value="submit">Search</button>
                 </div>
@@ -43,7 +43,13 @@
         </div>
         {{/each}}
         {{else}}
-        <p>no projects found </p>
+        <div class="column col-6 col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title h5 text-dark text-center">No projects found</div>
+                </div>
+            </div>
+        </div>
         {{/if}}
     </div>
 </div>
