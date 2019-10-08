@@ -5,74 +5,86 @@ const router = express.Router()
 
 
 router.get("/", function (request, response) {
+
     db.getAllProjects(function (error, project) {
-        var model = {}
+
         if (error) {
-            model = {
+            const model = {
                 somethingWentWrong: true
             }
+            response.render("portfolio.hbs", model)
         }
         else {
-            model = {
+            const model = {
                 project,
                 somethingWentWrong: false
             }
+            response.render("portfolio.hbs", model)
         }
-        response.render("portfolio.hbs", model)
     })
 })
 
 //** create project**//
 router.post('/', function (request, response) {
 
-    const projectTitle = request.body.title
-    const projectContent = request.body.content
-    const validationErrors = []
+    if (request.session.isLoggedIn) {
+        const projectTitle = request.body.title
+        const projectContent = request.body.content
+        const validationErrors = []
 
-    if (projectTitle == null || projectTitle.trim() == "") {
-        validationErrors.push("Must enter title")
-    }
+        if (projectTitle == null || projectTitle.trim() == "") {
+            validationErrors.push("Must enter title")
+        }
 
-    if (projectContent == null || projectContent.trim() == "") {
-        validationErrors.push("Must Enter content")
-    }
+        if (projectContent == null || projectContent.trim() == "") {
+            validationErrors.push("Must Enter content")
+        }
 
-    if (validationErrors.length == 0) {
-        db.createPortfolioProject(projectTitle, projectContent, function (error, id) {
-            if (error) {
-                // do something with error 
+        if (validationErrors.length == 0) {
+            db.createPortfolioProject(projectTitle, projectContent, function (error, id) {
+                if (error) {
+                    // do something with error 
+                }
+                else {
+
+                    response.redirect("/portfolio/project/" + id)
+                }
+            })
+        }
+        else {
+            const model = {
+                somethingWentWrong: false,
+                validationErrors,
+                projectTitle,
+                projectContent
             }
-            else {
-
-                response.redirect("/portfolio/project/" + id)
-            }
-        })
+            response.render("create-portfolio-project.hbs", model)
+        }
     }
     else {
-
-        const model = {
-            somethingWentWrong: false,
-            validationErrors,
-            projectTitle,
-            projectContent
-        }
-        response.render("create-portfolio-project.hbs", model)
+        response.redirect("/login")
     }
 })
 
 
 router.get('/create-project', function (request, response) {
-    response.render("create-portfolio-project.hbs")
+
+    if (request.session.isLoggedIn) {
+        response.render("create-portfolio-project.hbs")
+    }
+    else {
+        response.redirect("/login")
+    }
 })
 
 
 router.get("/project/:id", function (request, response) {
 
     const projectId = parseInt(request.params.id)
-    var model = {}
+
     db.getPortfolioProjectById(projectId, function (error, project) {
         if (error) {
-            model = {
+            const model = {
                 somethingWentWrong: true
             }
 
@@ -80,7 +92,7 @@ router.get("/project/:id", function (request, response) {
         }
         else {
 
-            model = {
+            const model = {
                 somethingWentWrong: false,
                 project
             }
@@ -92,18 +104,22 @@ router.get("/project/:id", function (request, response) {
 })
 
 router.post('/project/:id/delete', function (request, response) {
-    const id = parseInt(request.params.id)
+    if (request.session.isLoggedIn) {
+        const id = parseInt(request.params.id)
+        db.deleteProjectById(id, function (error) {
+            if (error) {
+                // do something with errors
+            }
+            else {
 
-    db.deleteProjectById(id, function (error) {
-        if (error) {
-            // do something with errors
-        }
-        else {
+                response.redirect("/portfolio")
 
-            response.redirect("/portfolio")
-
-        }
-    })
+            }
+        })
+    }
+    else {
+        response.redirect("/login")
+    }
 
 })
 
@@ -118,12 +134,12 @@ router.get('/search-project', function (request, response) {
             }
             response.render("portfolio.hbs", model)
         }
-        else{
+        else {
             const model = {
                 somethingWentWrong: false,
                 project
             }
-            response.render("portfolio.hbs",model)
+            response.render("portfolio.hbs", model)
         }
     })
 })

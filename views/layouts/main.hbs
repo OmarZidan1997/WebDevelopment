@@ -27,8 +27,14 @@
       <a href="/portfolio" class="btn btn-link">Portfolio</a>
       <a href="/about" class="btn btn-link">About</a>
       <a href="/contact" class="btn btn-link">Contact</a>
+      {{#unless isLoggedIn}}
       <a href="/login" class="btn btn-link">Login</a>
-      
+      {{else}}
+      <form action="/logout" method="GET">
+        <button class="btn btn-link p-centered">Logout</button>
+      </form>
+      {{/unless}}
+
       <footer class="text-center text-secondary ">
         <p class="text-break">Created by Omar</p>
       </footer>

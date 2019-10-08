@@ -15,24 +15,38 @@ const app = express()
 
 const usernameOfAdmin = "admin"
 var passwordOfAdmin
+
 bcrypt.genSalt(10, function (error, salt) {
-  bcrypt.hash("AdMin123", salt, function (error, hash) {
-    passwordOfAdmin = hash
-  })
+    bcrypt.hash("AdMin123", salt, function (error, hash) {
+        passwordOfAdmin = hash
+    })
 })
 
+
 app.use(expressSession({
-  secret: 'What Comes Around Goes Around',
-  resave: false,
-  saveUninitialized: true,
-  store: new SQLiteStore()
-}))
-app.engine("hbs", expressHandlebars({
-  defaultLayout: "main.hbs",
+    secret: 'What Comes Around Goes Around',
+    resave: false,
+    saveUninitialized: false,
+    store: new SQLiteStore()
 }))
 
+// add information if admin logged in or not
+app.use(function (request, response, next) {
+
+    response.locals.isLoggedIn = request.session.isLoggedIn
+
+    next()
+})
+
+app.engine("hbs", expressHandlebars({
+    defaultLayout: "main.hbs",
+}))
+
+
+
+
 app.use(bodyParser.urlencoded({
-  extended: false
+    extended: false
 }))
 
 
@@ -41,7 +55,7 @@ app.use(express.static('public'));
 
 
 app.get('/', function (request, response) {
-  response.render("home.hbs", { title: "Home Page" })
+    response.render("home.hbs", { title: "Home Page" })
 })
 
 
@@ -64,61 +78,94 @@ app.use("/portfolio", portfolioRouter)
 
 
 app.get('/about', function (request, response) {
-  response.render("about.hbs", { title: "About Page" })
+    response.render("about.hbs", { title: "About Page" })
 })
 
 
 
 
 app.get('/contact', function (request, response) {
-  response.render("contact.hbs", { title: "Contact Page" })
+    response.render("contact.hbs", { title: "Contact Page" })
 })
 
 app.get('/login', function (request, response) {
-  response.render("login.hbs")
+    if (!request.session.isLoggedIn) {
+        response.render("login.hbs")
+    }
+    else {
+        response.redirect("/")
+    }
+
 })
 app.post('/login', function (request, response) {
-  const usernameEntered = request.body.username
-  const passwordEntered = request.body.password
-  const validationErrors = []
+    if (!request.session.isLoggedIn) {
 
-  if (usernameEntered == null || usernameEntered.trim() == "") {
-    validationErrors.push("Must enter username")
-  }
+        const usernameEntered = request.body.username
+        const passwordEntered = request.body.password
+        const validationErrors = []
 
-  if (passwordEntered == null || passwordEntered.trim() == "") {
-    validationErrors.push("Must Enter password")
-  }
-
-  if (usernameEntered != usernameOfAdmin) {
-    validationErrors.push("details entered is wrong!")
-  }
-
-  if (validationErrors.length == 0) {
-
-      bcrypt.compare(passwordEntered, passwordOfAdmin, function (err, result) {
-        if (result == true) {
-          request.session.isLoggedIn = true
-          response.redirect("/")
-        } else {
-          validationErrors.push("details entered is wrong!")
-          const model = {
-            validationErrors
-          }
-          response.render("login.hbs",model)
+        if (usernameEntered == null || usernameEntered.trim() == "") {
+            
+            validationErrors.push("Must enter username")
         }
-      });
-  }
-  else {
-    const model = {
-      validationErrors,
-      usernameEntered,
-      passwordEntered
+
+        if (passwordEntered == null || passwordEntered.trim() == "") {
+
+            validationErrors.push("Must enter password")
+        }
+
+        if (usernameEntered != usernameOfAdmin && validationErrors.length == 0) {
+
+            validationErrors.push("details entered is wrong!")
+        }
+
+        if (validationErrors.length == 0) {
+
+            bcrypt.compare(passwordEntered, passwordOfAdmin, function (err, result) {
+                if (result == true) {
+                    request.session.isLoggedIn = true
+                    response.redirect("/")
+                } else {
+                    validationErrors.push("details entered is wrong!")
+                    const model = {
+                        validationErrors,
+                        usernameEntered,
+                        passwordEntered
+                    }
+                    response.render("login.hbs", model)
+                }
+            });
+        }
+        else {
+
+            const model = {
+                validationErrors,
+                usernameEntered,
+                passwordEntered
+            }
+            response.render("login.hbs", model)
+        }
     }
-    response.render("login.hbs",model)
-  }
+    else{
+        response.redirect("/")
+    }
 })
 
-
+app.get('/logout', function (request, response) {
+    if (request.session.isLoggedIn) {
+        // delete session object
+        request.session.destroy(function (error) {
+            if (error) {
+                console.log(error)
+            }
+            else {
+                response.redirect("/")
+            }
+        });
+    }
+    else {
+        response.redirect("/")
+    }
+})
 
 app.listen(8080)

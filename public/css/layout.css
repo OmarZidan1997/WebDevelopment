@@ -39,10 +39,15 @@ footer{
 #sidebar-left a:hover{
     color: red;
 }
+#sidebar-left form button{
+    color: white;
+}
+#sidebar-left form button:hover{
+    color: red;
+}
  .column{
     padding: 0.8rem;
 }
 h1{
     padding: 0.4rem;
 }
-/**** guestbook ****/

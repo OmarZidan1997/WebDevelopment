@@ -1,5 +1,6 @@
 <h1 class="text-center text-bold">Portfolio Projects</h1>
 <div class="container">
+    {{#if isLoggedIn}}
     <div class="columns">
         <div class="column col-12">
             <form action="/portfolio/create-project" method="GET">
@@ -7,6 +8,7 @@
             </form>
         </div>
     </div>
+    {{/if}}
     <div class="columns">
         <div class="column">
             <form action="/portfolio/search-project">
@@ -35,9 +37,11 @@
                     <form class="d-inline-block" action="/portfolio/project/{{id}}" method="GET">
                         <button class="btn btn-primary p-centered">visit</button>
                     </form>
+                    {{#if ../isLoggedIn}}
                     <form class="d-inline-block" action="/portfolio/project/{{id}}/delete" method="POST">
                         <button class="btn btn-primary p-centered">delete</button>
                     </form>
+                    {{/if}}
                 </div>
             </div>
         </div>

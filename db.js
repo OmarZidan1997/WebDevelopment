@@ -25,16 +25,16 @@ db.run(`
 	)
 `)
 
-exports.getBlogPostsForEachPage = function (postPerPage,offset,callback) {
+exports.getBlogPostsForEachPage = function (postPerPage, offset, callback) {
 
     const query = `SELECT COUNT(*) OVER() AS nrOfPosts,* 
     FROM blogPost
     Limit ? 
     OFFSET ?`
 
-    const values = [postPerPage,offset]
+    const values = [postPerPage, offset]
 
-    db.all(query, values,function (error, blogPosts) {
+    db.all(query, values, function (error, blogPosts) {
         callback(blogPosts, error)
     })
 
@@ -121,19 +121,9 @@ exports.deleteBlogPostCommentById = function (commentId, callback) {
 
 
 
-/*---------- Guestbook section starts ----------*/
+/*---------- Guestbooks-------------------------*/
 /*--------------------------------------------- */
 
-/*--------- Admin Table-------*/
-db.run(`
-	CREATE TABLE IF NOT EXISTS admin (
-		id INTEGER PRIMARY KEY,
-        name TEXT,
-        username TEXT,
-        password TEXT
-	)
-`)
-/*****************************/
 
 /*--------- Guestbook table-------*/
 db.run(`
@@ -231,7 +221,7 @@ exports.deleteGuestbookReplyById = function (id, callback) {
 }
 
 
-/*---------- Portfolio section starts ----------*/
+/*---------- Portfolio -------------------------*/
 /*--------------------------------------------- */
 
 
@@ -293,9 +283,10 @@ exports.searchForProjects = function (projectsToSearch, callback) {
     WHERE title LIKE ? 
     OR
     content LIKE ?`
-    const values = ["%"+ projectsToSearch + "%", "%"+ projectsToSearch + "%" ]
+    
+    const values = ["%" + projectsToSearch + "%", "%" + projectsToSearch + "%"]
 
-    db.all(query, values, function (error,project) {
-        callback(error,project)
+    db.all(query, values, function (error, project) {
+        callback(error, project)
     })
 }
