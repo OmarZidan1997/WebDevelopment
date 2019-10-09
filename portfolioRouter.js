@@ -43,7 +43,12 @@ router.post('/', function (request, response) {
         if (validationErrors.length == 0) {
             db.createPortfolioProject(projectTitle, projectContent, function (error, id) {
                 if (error) {
-                    // do something with error 
+                    const model = {
+                        error: true,
+                        errorType: "error 500! Internal server error",
+                        errorDescription: "Couldn't create portfolio project , please contact the support"
+                    }
+                    response.render("view-errors.hbs", model)
                 }
                 else {
 
@@ -85,10 +90,11 @@ router.get("/project/:id", function (request, response) {
     db.getPortfolioProjectById(projectId, function (error, project) {
         if (error) {
             const model = {
-                somethingWentWrong: true
+                error: true,
+                errorType: "error 500! Internal server error",
+                errorDescription: "Couldn't fetch data for that project in the database , please contact the support"
             }
-
-            response.render("portfolio-project.hbs", model)
+            response.render("view-errors.hbs", model)
         }
         else {
 
@@ -108,7 +114,12 @@ router.post('/project/:id/delete', function (request, response) {
         const id = parseInt(request.params.id)
         db.deleteProjectById(id, function (error) {
             if (error) {
-                // do something with errors
+                const model = {
+                    error: true,
+                    errorType: "error 500! Internal server error",
+                    errorDescription: "Couldn't delete project something is wrong in the database , please contact the support"
+                }
+                response.render("view-errors.hbs", model)
             }
             else {
 
@@ -130,9 +141,11 @@ router.get('/search-project', function (request, response) {
     db.searchForProjects(projectsToSearch, function (error, project) {
         if (error) {
             const model = {
-                somethingWentWrong: true
+                error: true,
+                errorType: "error 500! Internal server error",
+                errorDescription: "Couldn't search in project, please contact the support"
             }
-            response.render("portfolio.hbs", model)
+            response.render("view-errors.hbs", model)
         }
         else {
             const model = {

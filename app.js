@@ -121,11 +121,23 @@ app.post('/login', function (request, response) {
 
         if (validationErrors.length == 0) {
 
-            bcrypt.compare(passwordEntered, passwordOfAdmin, function (err, result) {
-                if (result == true) {
+            bcrypt.compare(passwordEntered, passwordOfAdmin, function (error, result) {
+
+                if(error){
+                    const model = {
+                        error: true,
+                        errorType: "Error with the login",
+                        errorDescription: "Couldn't  proceed with login"
+                    }
+                    response.render("view-errors.hbs", model)
+                }
+                else if (result == true) {
+
                     request.session.isLoggedIn = true
                     response.redirect("/")
-                } else {
+                } 
+                else {
+
                     validationErrors.push("details entered is wrong!")
                     const model = {
                         validationErrors,
@@ -134,7 +146,7 @@ app.post('/login', function (request, response) {
                     }
                     response.render("login.hbs", model)
                 }
-            });
+            });    
         }
         else {
 
@@ -156,7 +168,12 @@ app.get('/logout', function (request, response) {
         // delete session object
         request.session.destroy(function (error) {
             if (error) {
-                console.log(error)
+                const model = {
+                    error: true,
+                    errorType: "Error with logging out",
+                    errorDescription: "Please contact the support"
+                }
+                response.render("view-errors.hbs", model)
             }
             else {
                 response.redirect("/")

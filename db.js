@@ -10,7 +10,8 @@ db.run(`
 	CREATE TABLE IF NOT EXISTS blogPost (
 		id INTEGER PRIMARY KEY,
         title TEXT,
-        content TEXT
+        content TEXT,
+        timePostAdded TEXT
 	)
 `)
 db.run(`
@@ -40,10 +41,10 @@ exports.getBlogPostsForEachPage = function (postPerPage, offset, callback) {
 
 }
 
-exports.createBlogPost = function (title, content, callback) {
+exports.createBlogPost = function (title, content,timePostAdded,callback) {
 
-    const query = "INSERT INTO blogPost(title,content) VALUES(?,?)"
-    const values = [title, content]
+    const query = "INSERT INTO blogPost(title,content,timePostAdded) VALUES(?,?,?)"
+    const values = [title, content,timePostAdded]
 
     db.run(query, values, function (error) {
         const id = this.lastID

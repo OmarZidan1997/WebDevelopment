@@ -6,8 +6,8 @@ const router = express.Router()
 // Get all posts
 
 router.get('/create-blog-post', function (request, response) {
-    if (request.session.isLoggedIn) {
 
+    if (request.session.isLoggedIn) {
         response.render("create-blog-post.hbs")
     }
     else {
@@ -16,6 +16,7 @@ router.get('/create-blog-post', function (request, response) {
 })
 
 router.get("/:pageNr", function (request, response) {
+
     var postPerPage = 4;
     var currentPage = parseInt(request.params.pageNr)
     var previousPage = currentPage
@@ -37,19 +38,18 @@ router.get("/:pageNr", function (request, response) {
 
         if (error) {
             const model = {
-                somethingWentWrong: true
+                error: true,
+                errorType: "error 500! Internal server error",
+                errorDescription: "Blog page you are trying to visit doesnt exist please enter valid url"
             }
-
-            response.render("blog.hbs", model)
+            response.render("view-errors.hbs", model)
         }
         else {
-
             var nrOfPagesInBlog;
             var nextPage = 0;
             const page = []
             if (blogPost.length > 0) {
-                nrOfPagesInBlog = Math.ceil(blogPost[0].nrOfPosts / postPerPage) // nrOfPosts is the total amount of posts in db.
-
+                nrOfPagesInBlog = Math.ceil(blogPost[0].nrOfPosts / postPerPage)
                 for (var i = 1; i <= nrOfPagesInBlog; i++) {
                     if (i == currentPage) {
                         page.push({ pageNr: i, isCurrentPage: true })
@@ -58,12 +58,9 @@ router.get("/:pageNr", function (request, response) {
                         page.push({ pageNr: i, isCurrentPage: false })
                     }
                 }
-                console.table(page)
-
                 if (currentPage < nrOfPagesInBlog) {
                     nextPage = currentPage + 1
                 }
-
             }
             const model = {
 
@@ -73,7 +70,6 @@ router.get("/:pageNr", function (request, response) {
                 page,
                 somethingWentWrong: false
             }
-
             response.render("blog.hbs", model)
         }
 
@@ -82,6 +78,7 @@ router.get("/:pageNr", function (request, response) {
 })
 // Create a blog post 
 router.post("/", function (request, response) {
+
     if (request.session.isLoggedIn) {
         const title = request.body.title
         const content = request.body.content
@@ -96,22 +93,22 @@ router.post("/", function (request, response) {
         }
 
         if (validationErrors.length == 0) {
-            db.createBlogPost(title, content, function (error, id) {
+            var timePostAdded = new Date()
+            timePostAdded = timePostAdded.toLocaleString()
+            db.createBlogPost(title, content, timePostAdded, function (error, id) {
                 if (error) {
-
                     const model = {
-                        somethingWentWrong: true
+                        error: true,
+                        errorType: "error 500! Internal server error",
+                        errorDescription: "The post you are trying to create was not successfully created in te database please contact the support"
                     }
-
-                    response.render("create-blog-post.hbs", model)
+                    response.render("view-errors.hbs", model)
                 }
                 else {
 
                     response.redirect("/blog/post/" + id)
                 }
-
             })
-
         }
         else {
             const model = {
@@ -125,10 +122,7 @@ router.post("/", function (request, response) {
     else {
         response.redirect("/login")
     }
-
 })
-
-
 
 
 // get a specific blog post and its comments 
@@ -138,9 +132,11 @@ router.get("/post/:id", function (request, response) {
     db.getBlogPostAndCommentsById(id, function (error, blogPost) {
         if (error) {
             const model = {
-                somethingWentWrong: true
+                error: true,
+                errorType: "error 500! Internal server error",
+                errorDescription: "Couldnt fetch the blog post from the database , please contact the support"
             }
-            response.render("blog-post.hbs", model)
+            response.render("view-errors.hbs", model)
         }
         else {
             const model = {
@@ -150,58 +146,64 @@ router.get("/post/:id", function (request, response) {
             response.render("blog-post.hbs", model)
         }
     })
-
 })
 
 
 // delete blog post by ID
 router.post("/delete-blog-post/:id", function (request, response) {
+
     if (request.session.isLoggedIn) {
         const id = parseInt(request.params.id)
 
         db.deleteBlogPostById(id, function (error) {
-            response.redirect("/blog/1")
+            if (error) {
+                const model = {
+                    error: true,
+                    errorType: "error 500! Internal server error",
+                    errorDescription: "Couldnt delete the post , something is wrong with the database please the contact support"
+                }
+                response.render("view-errors.hbs", model)
+            }
+            else {
+                response.redirect("/blog/1")
+            }
         })
     }
     else {
         response.redirect("/login")
     }
-
 })
 
 // shows the form to edit a specific post 
 router.get("/post/:id/edit", function (request, response) {
+
     if (request.session.isLoggedIn) {
         const id = parseInt(request.params.id)
         db.getBlogPostById(id, function (error, blogPost) {
             if (error) {
-
                 const model = {
-                    somethingWentWrong: true
+                    error: true,
+                    errorType: "error 500! Internal server error",
+                    errorDescription: "Couldnt fetch the blog post from the database, please contact the support"
                 }
-
-                response.render("edit-blog-post.hbs", model)
+                response.render("view-errors.hbs", model)
             }
             else {
-
                 const model = {
                     somethingWentWrong: false,
                     blogPost
                 }
-
                 response.render("edit-blog-post.hbs", model)
             }
-
         })
-
     }
     else {
         response.redirect("/login")
     }
-
 })
 
 router.post("/post/:id/edit", function (request, response) {
+
     if (request.session.isLoggedIn) {
         const blogPostId = parseInt(request.params.id)
         const blogPostTitle = request.body.title
@@ -216,43 +218,39 @@ router.post("/post/:id/edit", function (request, response) {
         }
 
         if (validationErrors.length == 0) {
-
             db.updateBlogPostById(blogPostTitle, blogPostContent, blogPostId, function (error) {
                 if (error) {
                     const model = {
-                        somethingWentWrong: true
+                        error: true,
+                        errorType: "error 500! Internal server error",
+                        errorDescription: "Couldnt edit the post , please contact the support"
                     }
                     response.render("create-blog-post.hbs", model)
                 } else {
                     response.redirect("/blog/1")
                 }
-
             })
         }
         else {
             db.getBlogPostById(blogPostId, function (error, blogPost) {
                 if (error) {
-
                     const model = {
-                        somethingWentWrong: true
+                        error: true,
+                        errorType: "error 500! Internal server error",
+                        errorDescription: "Couldnt fetch the blog post from the database, please contact the support"
                     }
-
-                    response.render("edit-blog-post.hbs", model)
+                    response.render("view-errors.hbs", model)
                 }
                 else {
-
                     const model = {
                         somethingWentWrong: false,
                         validationErrors,
                         blogPost
                     }
-
                     response.render("edit-blog-post.hbs", model)
                 }
-
             })
         }
-
     }
     else {
         response.redirect("/login")
@@ -261,6 +259,7 @@ router.post("/post/:id/edit", function (request, response) {
 
 
 router.post("/post/:id/createcomment", function (request, response) {
+
     const blogId = parseInt(request.params.id)
     const nameOfTheGuest = request.body.name
     const commentOfTheGuest = request.body.comment
@@ -276,31 +275,28 @@ router.post("/post/:id/createcomment", function (request, response) {
     if (validationErrors.length == 0) {
         db.createBlogPostComment(nameOfTheGuest, commentOfTheGuest, blogId, function (error) {
             if (error) {
-
                 const model = {
-                    somethingWentWrong: true,
+                    error: true,
+                    errorType: "error 500! Internal server error",
+                    errorDescription: "Couldnt create comment for that post , please contact the support"
                 }
-
-                response.render("create-blog-post.hbs", model)
+                response.render("view-errors.hbs", model)
             }
             else {
 
                 response.redirect("/blog/post/" + blogId)
             }
-
         })
-
     }
     else {
-
         db.getBlogPostAndCommentsById(blogId, function (error, blogPost) {
             if (error) {
-
                 const model = {
-                    somethingWentWrong: true
+                    error: true,
+                    errorType: "error 500! Internal server error",
+                    errorDescription: "Couldnt fetch the blog post from the database, please contact the support"
                 }
-
-                response.render("blog-post.hbs", model)
+                response.render("view-errors.hbs", model)
             }
             else {
                 const model = {
@@ -310,11 +306,9 @@ router.post("/post/:id/createcomment", function (request, response) {
                     name: nameOfTheGuest,
                     comment: commentOfTheGuest
                 }
-
                 response.render("blog-post.hbs", model)
             }
         })
-
     }
 
 })
@@ -325,28 +319,24 @@ router.post("/post/:id/deletecomment/:commentId", function (request, response) {
     if (request.session.isLoggedIn) {
         const commentId = parseInt(request.params.commentId)
         const blogId = parseInt(request.params.id)
-        var model = {}
 
         db.deleteBlogPostCommentById(commentId, function (error) {
             if (error) {
-
-                model = {
-                    somethingWentWrong: true,
+                const model = {
+                    error: true,
+                    errorType: "error 500! Internal server error",
+                    errorDescription: "Couldn't delete comment in the blog post , please contact the support"
                 }
-
-                response.render("create-blog-post.hbs", model)
+                response.render("view-errors.hbs", model)
             }
             else {
-
                 response.redirect("/blog/post/" + blogId)
             }
-
         })
     }
     else {
         response.redirect("/login")
     }
-
 })
 
 

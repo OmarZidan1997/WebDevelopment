@@ -1,8 +1,5 @@
-<h1 class="text-center text-bold">Guestbook</h1>
+<h1 class="text-center">Guestbook</h1>
 <div class="divider"></div>
-{{#if somethingWentWrong}}
-<p class="text-break">internal error</p>
-{{else}}
 <div class="container">
     {{#if validationErrors.length}}
     <p>Errors:</p>
@@ -13,8 +10,7 @@
     </ul>
     {{/if}}
     <div class="columns">
-        <div class="column col-2"></div>
-        <div class="column  col-8">
+        <div class="column col-8 col-mx-auto">
             <form class="form-horizontal" action="/guestbook/" method="POST">
                 <div class="form-group">
                     <input class="form-input" type="text" name="name" value="{{name}}" placeholder="enter name">
@@ -23,14 +19,13 @@
                 </div>
             </form>
         </div>
-        <div class="column col-2"></div>
     </div>
     <div class="divider"></div>
     <div class="columns">
         <div class="column col-12">
             <div class="panel bg-dark">
                 <div class="panel-header text-center">
-                    <div class="panel-title  ">Comments</div>
+                    <div class="panel-title">Comments</div>
                 </div>
                 <div class="panel-body">
                     {{#if guestbook}}
@@ -41,9 +36,9 @@
                             <p class="tile-title text-bold text-break"> name: {{name}}</p>
                             <p class="tile-subtitle text-bold text-break"> comment: {{comment}}</p>
                             {{#if reply}}
-                            <p class=" tile-subtitle text-bold text-break"> Admin's answer : {{reply}}</p>
+                            <p class="tile-subtitle text-bold text-break"> Admin's answer : {{reply}}</p>
                             {{else}}
-                            <p class=" tile-subtitle text-bold text-break"> Admin's answer : No answer yet!</p>
+                            <p class="tile-subtitle text-bold text-break"> Admin's answer : No answer yet!</p>
                             {{/if}}
 
                             {{#if ../isLoggedIn}}
@@ -79,4 +74,3 @@
         </div>
     </div>
 </div>
-{{/if}}

@@ -8,10 +8,9 @@ html,body{
     box-sizing: border-box;
     margin-bottom: 20px;
 }
-/* 
-#header-main{
-    width: 100%;
-} */
+h1{
+    padding: 0.4rem;
+}
 .navbar{
     background-color: #8693AB;
 }
@@ -48,6 +47,7 @@ footer{
  .column{
     padding: 0.8rem;
 }
-h1{
-    padding: 0.4rem;
+
+textarea{
+    resize: none;
 }

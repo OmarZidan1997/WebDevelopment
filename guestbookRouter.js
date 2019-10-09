@@ -7,20 +7,20 @@ const router = express.Router()
 // get all guestbook comments
 router.get('/', function (request, response) {
     db.getAllGuestbookComments(function (error, guestbook) {
-
-        var model = {}
         if (error) {
-            model = {
-                somethingWentWrong: true
+            const model = {
+                error: true,
+                errorType: "error 500! Internal server error",
+                errorDescription: "Couldn't delete comment in the guestbook , please contact the support"
             }
+            response.render("view-errors.hbs", model)
         } else {
-            console.table(guestbook)
-            model = {
+            const model = {
                 guestbook: guestbook,
                 somethingWentWrong: false
             }
+            response.render("guestbook.hbs", model)
         }
-        response.render("guestbook.hbs", model)
     })
 })
 
@@ -28,7 +28,6 @@ router.get('/', function (request, response) {
 router.post('/', function (request, response) {
     const name = request.body.name
     const message = request.body.message
-    var model = {}
     const validationErrors = []
     if (name == null || name.trim() == "") {
         validationErrors.push("Must enter title")
@@ -41,37 +40,37 @@ router.post('/', function (request, response) {
     if (validationErrors.length == 0) {
         db.createGuestbookComment(name, message, function (error) {
             if (error) {
-
-                model = {
-                    somethingWentWrong: true
+                const model = {
+                    error: true,
+                    errorType: "error 500! Internal server error",
+                    errorDescription: "Couldn't create comment in the guestbook , please contact the support"
                 }
-                response.render("guestbook.hbs", model)
+                response.render("view-errors.hbs", model)
             }
             else {
-
                 response.redirect("/guestbook/")
             }
         })
     }
     else {
         db.getAllGuestbookComments(function (error, guestbook) {
-
-            var model = {}
             if (error) {
-                model = {
-                    somethingWentWrong: true
+                const model = {
+                    error: true,
+                    errorType: "error 500! Internal server error",
+                    errorDescription: "Couldn't fetch data required for guestbook page , please contact the support"
                 }
+                response.render("view-errors.hbs", model)
             } else {
-                console.table(guestbook)
-                model = {
+                const model = {
                     guestbook: guestbook,
                     somethingWentWrong: false,
                     validationErrors,
                     name,
                     message
                 }
+                response.render("guestbook.hbs", model)
             }
-            response.render("guestbook.hbs", model)
         })
     }
 })
@@ -94,7 +93,6 @@ router.post("/comment/:id/reply", function (request, response) {
     if (request.session.isLoggedIn) {
         const guestbookId = parseInt(request.params.id)
         const reply = request.body.reply
-        var model = {}
         const validationErrors = []
 
         if (reply == null || reply.trim() == "") {
@@ -104,20 +102,20 @@ router.post("/comment/:id/reply", function (request, response) {
         if (validationErrors.length == 0) {
             db.createGuestbookReply(guestbookId, reply, function (error) {
                 if (error) {
-
-                    model = {
-                        somethingWentWrong: true
+                    const model = {
+                        error: true,
+                        errorType: "error 500! Internal server error",
+                        errorDescription: "Couldn't create guestbook reply for a specific comment, please contact the support"
                     }
-                    response.render("guestbook-reply.hbs", model)
+                    response.render("view-errors.hbs", model)
                 }
                 else {
-
                     response.redirect("/guestbook/")
                 }
             })
         }
         else {
-            model = {
+            const model = {
                 somethingWentWrong: false,
                 guestbookId,
                 reply,
@@ -136,21 +134,18 @@ router.post("/comment/:id/reply", function (request, response) {
 router.get("/comment/:id/editReply", function (request, response) {
 
     if (request.session.isLoggedIn) {
-
-
         const guestbookId = parseInt(request.params.id);
-        var model = {}
         db.getGuestbookReplyById(guestbookId, function (error, reply) {
             if (error) {
-                model = {
-                    somethingWentWrong: true
+                const model = {
+                    error: true,
+                    errorType: "error 500! Internal server error",
+                    errorDescription: "Couldn't fetch data from the database to get a guestbook reply , please contact the support"
                 }
-
-                response.render("edit-guestbook-reply.hbs", model)
+                response.render("view-errors.hbs", model)
             }
             else {
-                console.table(reply)
-                model = {
+                const model = {
                     somethingWentWrong: false,
                     guestbookId,
                     reply
@@ -180,10 +175,12 @@ router.post("/comment/:id/editReply", function (request, response) {
 
             db.updateGuestbookReply(newReply, id, function (error) {
                 if (error) {
-                   const model = {
-                        somethingWentWrong: true
+                    const model = {
+                        error: true,
+                        errorType: "error 500! Internal server error",
+                        errorDescription: "Couldn't edit a guestbook reply , please contact the support"
                     }
-                    response.render("edit-guestbook-reply.hbs", model)
+                    response.render("view-errors.hbs", model)
                 } else {
                     response.redirect("/guestbook/")
                 }
@@ -192,16 +189,16 @@ router.post("/comment/:id/editReply", function (request, response) {
         else {
             db.getGuestbookReplyById(id, function (error, reply) {
                 if (error) {
-
-                   const model = {
-                        somethingWentWrong: true
+                    const model = {
+                        error: true,
+                        errorType: "error 500! Internal server error",
+                        errorDescription: "Couldn't fetch data required to edit a guestbook reply , please contact the support"
                     }
-
-                    response.render("edit-guestbook-reply.hbs", model)
+                    response.render("view-errors.hbs", model)
                 }
                 else {
 
-                   const model = {
+                    const model = {
                         somethingWentWrong: false,
                         validationErrors,
                         guestbookId: id,
@@ -222,8 +219,12 @@ router.post("/deleteReplyComment/:replyId", function (request, response) {
 
         db.deleteGuestbookReplyById(replyId, function (error) {
             if (error) {
-
-                //handle errors if couldnt delete reply
+                const model = {
+                    error: true,
+                    errorType: "error 500! Internal server error",
+                    errorDescription: "Couldn't delete guestbook reply  , please contact the support"
+                }
+                response.render("view-errors.hbs", model)
             }
             else {
 
@@ -232,7 +233,7 @@ router.post("/deleteReplyComment/:replyId", function (request, response) {
 
         })
     }
-    else{
+    else {
         response.redirect("/login")
     }
 
@@ -241,17 +242,27 @@ router.post("/deleteReplyComment/:replyId", function (request, response) {
 
 // delete comment from guestbook
 router.post("/comment/:id/delete", function (request, response) {
-    
-    if(request.session.isLoggedIn){
+
+    if (request.session.isLoggedIn) {
 
         const id = parseInt(request.params.id)
-    
+
         db.deleteCommentFromGuestbook(id, function (error) {
-            response.redirect("/guestbook/")
+            if (error) {
+                const model = {
+                    error: true,
+                    errorType: "error 500! Internal server error",
+                    errorDescription: "Couldn't delete comment from guestbook  , please contact the support"
+                }
+                response.render("view-errors.hbs", model)
+            }
+            else {
+                response.redirect("/guestbook/")
+            }
         })
 
     }
-    else{
+    else {
         response.redirect("/login")
     }
 })

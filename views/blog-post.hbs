@@ -1,9 +1,6 @@
-{{#if somethingWentWrong}}
-<p>internal error with the server</p>
-{{else}}
+{{#if blogPost}}
 <div class="container">
     <div class="columns">
-        {{#if blogPost}}
         <div class="column col-12">
             <h2 class="text-center text-break">{{blogPost.0.title}}</h2>
             <p class="text-break">{{blogPost.0.content}}</p>
@@ -17,9 +14,7 @@
             {{/if}}
         </div>
     </div>
-
-    <div class="column col-12"></div>
-    <div class="divider"></div>
+    <div class="divider p-2"></div>
     <div class="columns">
         <div class="column col-6 col-xs-12">
             <form action="/blog/post/{{blogPost.0.id}}/createcomment" method="POST">
@@ -31,8 +26,7 @@
             </form>
         </div>
     </div>
-    <div class="divider"></div>
-    <div class="column col-12"></div>
+    <div class="divider p-2"></div>
     <div class="columns">
         <div class="column col-12">
             <div class="panel bg-dark">
@@ -69,5 +63,4 @@
 </div>
 {{else}}
 <p>No blog post with that id.</p>
-{{/if}}
 {{/if}}
