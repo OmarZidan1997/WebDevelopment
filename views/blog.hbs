@@ -15,7 +15,7 @@
             <ul class="pagination bg-dark">
                 {{#if previousPage}}
                 <li class="page-item">
-                    <a href="/blog/{{previousPage}}" tabindex="-1">Previous</a>
+                    <a href="/blog/page/{{previousPage}}" tabindex="-1">Previous</a>
                 </li>
                 {{else}}
                 <li class="page-item disabled">
@@ -26,18 +26,18 @@
                 {{#each page}}
                 {{#if isCurrentPage}}
                 <li class="page-item active">
-                    <a href="/blog/{{pageNr}}">{{pageNr}}</a>
+                    <a href="/blog/page/{{pageNr}}">{{pageNr}}</a>
                 </li>
                 {{else}}
                 <li class="page-item">
-                    <a href="/blog/{{pageNr}}">{{pageNr}}</a>
+                    <a href="/blog/page/{{pageNr}}">{{pageNr}}</a>
                 </li>
                 {{/if}}
                 {{/each}}
 
                 {{#if nextPage}}
                 <li class="page-item">
-                    <a href="/blog/{{nextPage}}">Next</a>
+                    <a href="/blog/page/{{nextPage}}">Next</a>
                 </li>
                 {{else}}
                 <li class="page-item disabled">

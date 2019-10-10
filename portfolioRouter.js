@@ -88,6 +88,7 @@ router.get("/project/:id", function (request, response) {
     const projectId = parseInt(request.params.id)
 
     db.getPortfolioProjectById(projectId, function (error, project) {
+        
         if (error) {
             const model = {
                 error: true,
@@ -97,12 +98,10 @@ router.get("/project/:id", function (request, response) {
             response.render("view-errors.hbs", model)
         }
         else {
-
             const model = {
                 somethingWentWrong: false,
                 project
             }
-
             response.render("portfolio-project.hbs", model)
         }
     })
@@ -110,9 +109,12 @@ router.get("/project/:id", function (request, response) {
 })
 
 router.post('/project/:id/delete', function (request, response) {
+    
     if (request.session.isLoggedIn) {
+
         const id = parseInt(request.params.id)
         db.deleteProjectById(id, function (error) {
+            
             if (error) {
                 const model = {
                     error: true,

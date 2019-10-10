@@ -36,6 +36,7 @@ exports.getBlogPostsForEachPage = function (postPerPage, offset, callback) {
     const values = [postPerPage, offset]
 
     db.all(query, values, function (error, blogPosts) {
+        console.table(blogPosts)
         callback(blogPosts, error)
     })
 
@@ -82,7 +83,8 @@ exports.updateBlogPostById = function (newTitle, newContent, id, callback) {
     const query = "UPDATE blogPost SET title = ?, content = ? WHERE id = ?"
     const values = [newTitle, newContent, id]
     db.run(query, values, function (error) {
-        callback(error)
+        const changes = this.changes
+        callback(error,changes)
     })
 }
 

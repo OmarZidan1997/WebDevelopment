@@ -6,7 +6,9 @@ const router = express.Router()
 
 // get all guestbook comments
 router.get('/', function (request, response) {
+
     db.getAllGuestbookComments(function (error, guestbook) {
+        
         if (error) {
             const model = {
                 error: true,
@@ -26,6 +28,7 @@ router.get('/', function (request, response) {
 
 // create guestbook comment
 router.post('/', function (request, response) {
+
     const name = request.body.name
     const message = request.body.message
     const validationErrors = []
@@ -78,6 +81,7 @@ router.post('/', function (request, response) {
 
 //gets reply form
 router.get("/comment/:id/reply", function (request, response) {
+
     if (request.session.isLoggedIn) {
         const guestbookId = parseInt(request.params.id);
         const model = { guestbookId }
@@ -90,6 +94,7 @@ router.get("/comment/:id/reply", function (request, response) {
 
 // answer a guest's comment
 router.post("/comment/:id/reply", function (request, response) {
+
     if (request.session.isLoggedIn) {
         const guestbookId = parseInt(request.params.id)
         const reply = request.body.reply
@@ -161,8 +166,8 @@ router.get("/comment/:id/editReply", function (request, response) {
 })
 
 router.post("/comment/:id/editReply", function (request, response) {
-    if (request.session.isLoggedIn) {
 
+    if (request.session.isLoggedIn) {
         const id = parseInt(request.params.id)
         const newReply = request.body.reply
         const validationErrors = []
@@ -214,7 +219,6 @@ router.post("/comment/:id/editReply", function (request, response) {
 router.post("/deleteReplyComment/:replyId", function (request, response) {
 
     if (request.session.isLoggedIn) {
-
         const replyId = parseInt(request.params.replyId)
 
         db.deleteGuestbookReplyById(replyId, function (error) {
@@ -230,7 +234,6 @@ router.post("/deleteReplyComment/:replyId", function (request, response) {
 
                 response.redirect("/guestbook/")
             }
-
         })
     }
     else {
@@ -244,7 +247,6 @@ router.post("/deleteReplyComment/:replyId", function (request, response) {
 router.post("/comment/:id/delete", function (request, response) {
 
     if (request.session.isLoggedIn) {
-
         const id = parseInt(request.params.id)
 
         db.deleteCommentFromGuestbook(id, function (error) {
@@ -260,7 +262,6 @@ router.post("/comment/:id/delete", function (request, response) {
                 response.redirect("/guestbook/")
             }
         })
-
     }
     else {
         response.redirect("/login")

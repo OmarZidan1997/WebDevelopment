@@ -125,9 +125,8 @@ app.post('/login', function (request, response) {
 
                 if(error){
                     const model = {
-                        error: true,
                         errorType: "Error with the login",
-                        errorDescription: "Couldn't  proceed with login"
+                        errorDescription: "Couldn't  proceed with login, please contact me!"
                     }
                     response.render("view-errors.hbs", model)
                 }
@@ -169,9 +168,8 @@ app.get('/logout', function (request, response) {
         request.session.destroy(function (error) {
             if (error) {
                 const model = {
-                    error: true,
                     errorType: "Error with logging out",
-                    errorDescription: "Please contact the support"
+                    errorDescription: "Please contact me!"
                 }
                 response.render("view-errors.hbs", model)
             }
@@ -184,5 +182,14 @@ app.get('/logout', function (request, response) {
         response.redirect("/")
     }
 })
+
+// this will view page not found if user try to cange the url that didnt match wih the routers.
+app.get("/*",function(request,response){
+    response.render("error404.hbs")
+})
+app.post("/*",function(request,response){
+    response.render("error404.hbs")
+})
+
 
 app.listen(8080)
