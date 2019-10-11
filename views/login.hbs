@@ -1,4 +1,4 @@
-<h1 class="text-center text-bold">Login</h1>
+<h1>Login</h1>
 {{#if validationErrors.length}}
 <p>Errors:</p>
 <ul>
@@ -16,6 +16,7 @@
                 <input class="form-input" type="text" name="username" value="{{usernameEntered}}" placeholder="enter id  ">
                 <label class="form-label">Password</label>
                 <input class="form-input" type="password" name="password" value="{{passwordEntered}}" placeholder="enter password ">
+                <input type="hidden" name="_csrf" value="{{csrfToken}}">
                 <button class="btn btn-primary" value="create post">submit</button>
             </form>
         </div>

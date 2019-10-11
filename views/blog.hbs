@@ -1,84 +1,82 @@
-<h1 class="text-center text-bold">Blog</h1>
-<div class="container">
-    {{#if isLoggedIn}}
-    <div class="columns">
-        <div class="column col-12">
-            <form action="/blog/create-blog-post" class="d-inline-block">
-                <button class="btn btn-primary d-inline-block">create post</button>
-            </form>
-        </div>
+<h1>Blog</h1>
+{{#if isLoggedIn}}
+<div class="columns">
+    <div class="column col-12">
+        <form action="/blog/create-blog-post" class="d-inline-block" method="GET">
+            <button class="btn btn-primary d-inline-block">create post</button>
+        </form>
     </div>
-    {{/if}}
-    {{#if blogPost}}
-    <div class="columns">
-        <div class="column col-12">
-            <ul class="pagination bg-dark">
-                {{#if previousPage}}
-                <li class="page-item">
-                    <a href="/blog/page/{{previousPage}}" tabindex="-1">Previous</a>
-                </li>
-                {{else}}
-                <li class="page-item disabled">
-                    <a href="#">Previous</a>
-                </li>
-                {{/if}}
+</div>
+{{/if}}
+<div class="columns">
+    <div class="column col-12">
+        <ul class="pagination bg-dark">
+            {{#if previousPage}}
+            <li class="page-item">
+                <a href="/blog/page/{{previousPage}}">Previous</a>
+            </li>
+            {{else}}
+            <li class="page-item disabled">
+                <a href="#">Previous</a>
+            </li>
+            {{/if}}
 
-                {{#each page}}
-                {{#if isCurrentPage}}
-                <li class="page-item active">
-                    <a href="/blog/page/{{pageNr}}">{{pageNr}}</a>
-                </li>
-                {{else}}
-                <li class="page-item">
-                    <a href="/blog/page/{{pageNr}}">{{pageNr}}</a>
-                </li>
-                {{/if}}
-                {{/each}}
+            {{#each page}}
+            {{#if isCurrentPage}}
+            <li class="page-item active">
+                <a href="/blog/page/{{pageNr}}">{{pageNr}}</a>
+            </li>
+            {{else}}
+            <li class="page-item">
+                <a href="/blog/page/{{pageNr}}">{{pageNr}}</a>
+            </li>
+            {{/if}}
+            {{/each}}
 
-                {{#if nextPage}}
-                <li class="page-item">
-                    <a href="/blog/page/{{nextPage}}">Next</a>
-                </li>
-                {{else}}
-                <li class="page-item disabled">
-                    <a href="#">Next</a>
-                </li>
-                {{/if}}
-            </ul>
-        </div>
+            {{#if nextPage}}
+            <li class="page-item">
+                <a href="/blog/page/{{nextPage}}">Next</a>
+            </li>
+            {{else}}
+            <li class="page-item disabled">
+                <a href="#">Next</a>
+            </li>
+            {{/if}}
+        </ul>
     </div>
-    <div class="columns">
-        {{#each blogPost}}
-        <div class="column col-12 ">
-            <div class="card bg-dark">
-                <div class="card-header p-centered ">
-                    <div class="card-title h6 text-break">{{title}}</div>
-                </div>
+</div>
+{{#if blogPost}}
+<div class="columns">
+    {{#each blogPost}}
+    <div class="column col-12 ">
+        <div class="card bg-dark">
+            <div class="card-header p-centered ">
+                <div class="card-title h6 text-break">{{title}}</div>
+            </div>
 
-                <div class="card-body">
-                    <p> Posted : {{timePostAdded}}</p>
-                </div>
-                <div class="card-footer">
-                    <div class="form-group">
-                        <form action="/blog/post/{{id}}" class="d-inline-block">
-                            <button class="btn btn-primary">visit</button>
-                        </form>
-                        {{#if ../isLoggedIn}}
-                        <form class="d-inline-block" action="/blog/post/{{id}}/edit" class="d-inline-block"
-                            method="GET">
-                            <button class="btn btn-primary">Edit</button>
-                        </form>
-                        <form action="/blog/delete-blog-post/{{id}}" class="d-inline-block" method="POST">
-                            <button class="btn btn-primary">delete</button>
-                        </form>
-                        {{/if}}
-                    </div>
+            <div class="card-body">
+                <p> Posted : {{timePostAdded}}</p>
+            </div>
+            <div class="card-footer">
+                <div class="form-group">
+                    <form action="/blog/post/{{id}}" class="d-inline-block">
+                        <button class="btn btn-primary">visit</button>
+                    </form>
+                    {{#if ../isLoggedIn}}
+                    <form class="d-inline-block" action="/blog/post/{{id}}/edit" class="d-inline-block" method="GET">
+                        <button class="btn btn-primary">Edit</button>
+                    </form>
+                    <form action="/blog/delete-blog-post/{{id}}" class="d-inline-block" method="POST">
+                        <input type="hidden" name="_csrf" value="{{../csrfToken}}">
+                        <button class="btn btn-primary">delete</button>
+                    </form>
+                    {{/if}}
                 </div>
             </div>
         </div>
-        {{/each}}
     </div>
-    {{else}}
-    <p>Sorry there are no blog posts in this page</p>
-    {{/if}}
+    {{/each}}
 </div>
+{{else}}
+<p>Sorry there are no blog posts in this page</p>
+{{/if}}

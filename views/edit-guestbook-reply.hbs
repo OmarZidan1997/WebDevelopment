@@ -1,6 +1,4 @@
-{{#if somethingWentWrong}}
-<p>internal error</p>
-{{else}}
+<h1>Update guestbook reply</h1>
 {{#if validationErrors.length}}
 <p>Errors:</p>
 <ul>
@@ -9,11 +7,12 @@
     {{/each}}
 </ul>
 {{/if}}
-<form action="/guestbook/comment/{{guestbookId}}/editReply" method="POST">
+<form class="column col-8 col-mx-auto" action="/guestbook/comment/{{guestbookId}}/editReply" method="POST">
     <div class="form-group">
         <label class="form-label" for="input-example-3">Message</label>
-        <textarea class="form-input" id="input-example-3" name="reply" placeholder="enter a reply message" rows="3">{{reply.reply}}</textarea>
+        <textarea class="form-input" id="input-example-3" name="reply" placeholder="enter a reply message"
+            rows="3">{{reply.reply}}</textarea>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
     </div>
     <button class="btn btn-primary" value="edit">edit</button>
 </form>
-{{/if}}

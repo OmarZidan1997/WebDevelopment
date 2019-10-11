@@ -1,8 +1,11 @@
-
-{{#if somethingWentWrong}}
-<p>internal error</p>
-{{/if}}
-
+<div clasS="columns">
+  <div class="column col-8 col-mx-auto">
+    <p class="text-break">Name : {{guestbookComment.name}}</p>
+  </div>
+  <div class="column col-8 col-mx-auto">
+    <p class="text-break">Comment : {{guestbookComment.comment}}</p>
+  </div>
+</div>
 {{#if validationErrors.length}}
 <p>Errors:</p>
 <ul>
@@ -12,10 +15,12 @@
 </ul>
 {{/if}}
 
-<form action="/guestbook/comment/{{guestbookId}}/reply" method="POST">
+<form class="column col-8 col-mx-auto" action="/guestbook/comment/{{guestbookComment.id}}/reply" method="POST">
   <div class="form-group">
     <label class="form-label" for="input-example-3">Message</label>
-    <textarea class="form-input" id="input-example-3" name="reply" placeholder="enter a reply message" rows="3"></textarea>
-  </div>
+    <textarea class="form-input" id="input-example-3" name="reply" placeholder="enter a reply message"
+      rows="3"></textarea>
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
     <button class="btn btn-primary" value="send-reply">reply</button>
+  </div>
 </form>

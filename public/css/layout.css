@@ -9,18 +9,18 @@ html,body{
     margin-bottom: 20px;
 }
 h1{
-    padding: 0.4rem;
+   text-align: center;
+   word-break: break-all;
+   word-wrap: break-word;
+}
+p{
+    word-break: break-all;
+    word-wrap: break-word;
 }
 .navbar{
     background-color: #8693AB;
 }
 
-footer{
-    background-color: #546A7B; 
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-}
 .off-canvas .off-canvas-sidebar{
     background-color:  #6290C8 !important;
     min-height: 100vh;
@@ -51,3 +51,19 @@ footer{
 textarea{
     resize: none;
 }
+
+footer{
+    background-color: #546A7B; 
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+@media screen and (max-width: 600px) {
+    .pagination{
+        display: block;
+    }
+    .pagination .page-item{
+        display:inline;
+    }
+  }

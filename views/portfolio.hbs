@@ -1,56 +1,55 @@
-<h1 class="text-center text-bold">Portfolio Projects</h1>
-<div class="container">
-    {{#if isLoggedIn}}
-    <div class="columns">
-        <div class="column col-12">
-            <form action="/portfolio/create-project" method="GET">
-                <button class="btn btn-primary" value="create post">create post</button>
-            </form>
+<h1>Portfolio Projects</h1>
+{{#if isLoggedIn}}
+<div class="columns">
+    <div class="column col-12">
+        <form action="/portfolio/create-project" method="GET">
+            <button class="btn btn-primary" value="create post">create post</button>
+        </form>
+    </div>
+</div>
+{{/if}}
+<div class="columns">
+    <div class="column">
+        <form action="/portfolio/search-project">
+            <div class="input-group input-inline col-6 col-sm-12 col-lg-6">
+                <input class="form-input" type="text" name="searchInput" placeholder="search for a project">
+                <button class="btn btn-primary input-group-btn" value="submit">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="columns">
+    {{#if project}}
+    {{#each project}}
+    <div class="column col-6 col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title h5 text-dark text-center">{{title}}</div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="card-body p-centered">
+                <form class="d-inline-block" action="/portfolio/project/{{id}}" method="GET">
+                    <button class="btn btn-primary p-centered">visit</button>
+                </form>
+                {{#if ../isLoggedIn}}
+                <form class="d-inline-block" action="/portfolio/project/{{id}}/delete" method="POST">
+                    <input type="hidden" name="_csrf" value="{{../csrfToken}}">
+                    <button class="btn btn-primary p-centered">delete</button>
+                </form>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+    {{/each}}
+    {{else}}
+    <div class="column col-6 col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title h5 text-dark text-center">No projects found</div>
+            </div>
         </div>
     </div>
     {{/if}}
-    <div class="columns">
-        <div class="column">
-            <form action="/portfolio/search-project">
-                <div class="input-group input-inline col-6 col-sm-12 col-lg-6">
-                    <input class="form-input" type="text" name="searchInput"  placeholder="search for a project">
-                    <button class="btn btn-primary input-group-btn" value="submit">Search</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="columns">
-        {{#if project}}
-        {{#each project}}
-        <div class="column col-6 col-sm-12">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title h5 text-dark text-center">{{title}}</div>
-                </div>
-
-                <div class="divider"></div>
-
-                <div class="card-body p-centered">
-                    <form class="d-inline-block" action="/portfolio/project/{{id}}" method="GET">
-                        <button class="btn btn-primary p-centered">visit</button>
-                    </form>
-                    {{#if ../isLoggedIn}}
-                    <form class="d-inline-block" action="/portfolio/project/{{id}}/delete" method="POST">
-                        <button class="btn btn-primary p-centered">delete</button>
-                    </form>
-                    {{/if}}
-                </div>
-            </div>
-        </div>
-        {{/each}}
-        {{else}}
-        <div class="column col-6 col-sm-12">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title h5 text-dark text-center">No projects found</div>
-                </div>
-            </div>
-        </div>
-        {{/if}}
-    </div>
 </div>

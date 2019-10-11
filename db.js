@@ -36,16 +36,15 @@ exports.getBlogPostsForEachPage = function (postPerPage, offset, callback) {
     const values = [postPerPage, offset]
 
     db.all(query, values, function (error, blogPosts) {
-        console.table(blogPosts)
         callback(blogPosts, error)
     })
 
 }
 
-exports.createBlogPost = function (title, content,timePostAdded,callback) {
+exports.createBlogPost = function (title, content, timePostAdded, callback) {
 
     const query = "INSERT INTO blogPost(title,content,timePostAdded) VALUES(?,?,?)"
-    const values = [title, content,timePostAdded]
+    const values = [title, content, timePostAdded]
 
     db.run(query, values, function (error) {
         const id = this.lastID
@@ -84,7 +83,7 @@ exports.updateBlogPostById = function (newTitle, newContent, id, callback) {
     const values = [newTitle, newContent, id]
     db.run(query, values, function (error) {
         const changes = this.changes
-        callback(error,changes)
+        callback(error, changes)
     })
 }
 
@@ -118,7 +117,8 @@ exports.deleteBlogPostCommentById = function (commentId, callback) {
     const query = "DELETE FROM blogPostComment WHERE commentId = ?"
     const values = [commentId]
     db.run(query, values, function (error) {
-        callback(error)
+        const changes = this.changes
+        callback(error,changes)
     })
 }
 
@@ -162,6 +162,16 @@ exports.createGuestbookComment = function (name, message, callback) {
     })
 }
 
+exports.getGuestbookCommentById = function (id, callback) {
+
+    const values = [id]
+    const query = `SELECT * FROM guestbook WHERE id = ?`
+
+    db.get(query, values, function (error, guestbookComment) {
+        callback(error, guestbookComment)
+    })
+}
+
 exports.getAllGuestbookComments = function (callback) {
 
     const query = `
@@ -178,8 +188,8 @@ exports.getAllGuestbookComments = function (callback) {
 
 exports.deleteCommentFromGuestbook = function (id, callback) {
 
-    const query = `DELETE FROM  guestbook WHERE id = ?`
     const values = [id];
+    const query = `DELETE FROM  guestbook WHERE id = ?`
     db.run(query, values, function (error) {
         callback(error)
     })
@@ -198,7 +208,8 @@ exports.updateGuestbookReply = function (newReply, id, callback) {
     const query = "UPDATE guestbookReply SET reply = ? WHERE guestbookId = ?"
     const values = [newReply, id]
     db.run(query, values, function (error) {
-        callback(error)
+        const changes = this.changes
+        callback(error, changes)
     })
 }
 
@@ -286,7 +297,7 @@ exports.searchForProjects = function (projectsToSearch, callback) {
     WHERE title LIKE ? 
     OR
     content LIKE ?`
-    
+
     const values = ["%" + projectsToSearch + "%", "%" + projectsToSearch + "%"]
 
     db.all(query, values, function (error, project) {

@@ -1,62 +1,62 @@
 {{#if blogPost}}
-<div class="container">
-    <div class="columns">
-        <div class="column col-12">
-            <h2 class="text-center text-break">{{blogPost.0.title}}</h2>
-            <p class="text-break">{{blogPost.0.content}}</p>
-            {{#if validationErrors.length}}
-            <p>Errors:</p>
-            <ul>
-                {{#each validationErrors}}
-                <li>{{this}}</li>
+<div class="columns">
+    <div class="column col-12">
+        <h2 class="text-break">{{blogPost.0.title}}</h2>
+        <p class="text-break">{{blogPost.0.content}}</p>
+        {{#if validationErrors.length}}
+        <p>Errors:</p>
+        <ul>
+            {{#each validationErrors}}
+            <li>{{this}}</li>
+            {{/each}}
+        </ul>
+        {{/if}}
+    </div>
+</div>
+<div class="divider p-2"></div>
+<div class="columns">
+    <div class="column col-6 col-xs-12">
+        <form action="/blog/post/{{blogPost.0.id}}/createcomment" method="POST">
+            <div class="form-group">
+                <input class="form-input" type="text" name="name" value="{{name}}" placeholder="Name">
+                <input class="form-input" type="text" name="comment" value="{{comment}}" placeholder="comment">
+                <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                <button class="btn btn-primary">submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="divider p-2"></div>
+<div class="columns">
+    <div class="column col-12">
+        <div class="panel bg-dark">
+            <div class="panel-header text-center">
+                <div class="panel-title  ">Comments</div>
+            </div>
+            <div class="panel-body">
+                {{#if blogPost.0.comment}}
+                {{#each blogPost}}
+                <div class="divider"></div>
+                <div class="tile">
+                    <div class="tile-content">
+                        <p class="tile-title text-bold text-break">name: {{name}}</p>
+                        <p class="tile-subtitle text-break"> comment: {{comment}}</p>
+                        {{#if ../isLoggedIn}}
+                        <form action="/blog/post/{{id}}/deletecomment/{{commentid}}" method="POST">
+                            <input type="hidden" name="_csrf" value="{{../csrfToken}}">
+                            <button class="btn btn-primary">Delete</button>
+                        </form>
+                        {{/if}}
+                    </div>
+                </div>
                 {{/each}}
-            </ul>
-            {{/if}}
-        </div>
-    </div>
-    <div class="divider p-2"></div>
-    <div class="columns">
-        <div class="column col-6 col-xs-12">
-            <form action="/blog/post/{{blogPost.0.id}}/createcomment" method="POST">
-                <div class="form-group">
-                    <input class="form-input" type="text" name="name" value="{{name}}" placeholder="Name">
-                    <input class="form-input" type="text" name="comment" value="{{comment}}" placeholder="comment">
-                    <button class="btn btn-primary">submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="divider p-2"></div>
-    <div class="columns">
-        <div class="column col-12">
-            <div class="panel bg-dark">
-                <div class="panel-header text-center">
-                    <div class="panel-title  ">Comments</div>
-                </div>
-                <div class="panel-body">
-                    {{#if blogPost.0.comment}}
-                    {{#each blogPost}}
-                    <div class="divider"></div>
-                    <div class="tile">
-                        <div class="tile-content">
-                            <p class="tile-title text-bold text-break">name: {{name}}</p>
-                            <p class="tile-subtitle text-break"> comment: {{comment}}</p>
-                            {{#if ../isLoggedIn}}
-                            <form action="/blog/post/{{id}}/deletecomment/{{commentid}}" method="POST">
-                                <button class="btn btn-primary">Delete</button>
-                            </form>
-                            {{/if}}
-                        </div>
+                {{else}}
+                <div class="tile">
+                    <div class="tile-content">
+                        <p class="tile-title text-bold text-break">No comments yet</p>
                     </div>
-                    {{/each}}
-                    {{else}}
-                    <div class="tile">
-                        <div class="tile-content">
-                            <p class="tile-title text-bold text-break">No comments yet</p>
-                        </div>
-                    </div>
-                    {{/if}}
                 </div>
+                {{/if}}
             </div>
         </div>
     </div>

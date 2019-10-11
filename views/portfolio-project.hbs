@@ -1,18 +1,17 @@
-<div class="container">
+
     <div class="columns">
         {{#if project}}
         <div class="card column col-8 col-sm-10 col-mx-auto">
-            <div class="card-header">
+            <div class="card-header text-break">
                 <div class="card-title h5 text-center text-bold text-dark">{{project.title}}</div>
             </div>
             <div class="divider"></div>
 
-            <div class="card-body">
-                <p class="text-break text-center text-dark">{{project.content}}</p>
+            <div class="card-body text-break">
+                <p class="text-dark">{{project.content}}</p>
             </div>
         </div>
         {{else}}
         <p>no project with that id.</p>
         {{/if}}
     </div>
-</div>

@@ -7,6 +7,7 @@ const portfolioRouter = require('./portfolioRouter')
 const expressSession = require("express-session")
 const SQLiteStore = require('connect-sqlite3')(expressSession)
 var bcrypt = require('bcryptjs')
+var csrf = require('csurf')
 const db = require('./db')
 
 
@@ -30,11 +31,19 @@ app.use(expressSession({
     store: new SQLiteStore()
 }))
 
+app.use(bodyParser.urlencoded({
+    extended: false
+}))
+
+app.use(csrf());
+
+app.use(function (request, response, next) {
+    response.locals.csrfToken = request.csrfToken()
+    next()
+})
 // add information if admin logged in or not
 app.use(function (request, response, next) {
-
     response.locals.isLoggedIn = request.session.isLoggedIn
-
     next()
 })
 
@@ -42,16 +51,7 @@ app.engine("hbs", expressHandlebars({
     defaultLayout: "main.hbs",
 }))
 
-
-
-
-app.use(bodyParser.urlencoded({
-    extended: false
-}))
-
-
 app.use(express.static('public'));
-
 
 
 app.get('/', function (request, response) {
@@ -105,7 +105,7 @@ app.post('/login', function (request, response) {
         const validationErrors = []
 
         if (usernameEntered == null || usernameEntered.trim() == "") {
-            
+
             validationErrors.push("Must enter username")
         }
 
@@ -123,7 +123,7 @@ app.post('/login', function (request, response) {
 
             bcrypt.compare(passwordEntered, passwordOfAdmin, function (error, result) {
 
-                if(error){
+                if (error) {
                     const model = {
                         errorType: "Error with the login",
                         errorDescription: "Couldn't  proceed with login, please contact me!"
@@ -134,7 +134,7 @@ app.post('/login', function (request, response) {
 
                     request.session.isLoggedIn = true
                     response.redirect("/")
-                } 
+                }
                 else {
 
                     validationErrors.push("details entered is wrong!")
@@ -145,7 +145,7 @@ app.post('/login', function (request, response) {
                     }
                     response.render("login.hbs", model)
                 }
-            });    
+            });
         }
         else {
 
@@ -157,7 +157,7 @@ app.post('/login', function (request, response) {
             response.render("login.hbs", model)
         }
     }
-    else{
+    else {
         response.redirect("/")
     }
 })
@@ -184,10 +184,10 @@ app.get('/logout', function (request, response) {
 })
 
 // this will view page not found if user try to cange the url that didnt match wih the routers.
-app.get("/*",function(request,response){
+app.get("/*", function (request, response) {
     response.render("error404.hbs")
 })
-app.post("/*",function(request,response){
+app.post("/*", function (request, response) {
     response.render("error404.hbs")
 })
 

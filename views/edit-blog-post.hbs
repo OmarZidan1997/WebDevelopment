@@ -1,31 +1,20 @@
-<h2 class="text-center text-bold">Update blog post </h2>
-{{#if somethingWentWrong}}
-    <p>internal error</p>
-{{else}}
-    {{#if validationErrors.length}}
-        <p>Errors:</p>
-        <ul>
-            {{#each validationErrors}}
-            <li>{{this}}</li>
-            {{/each}}
-        </ul>
-    {{/if}}
-    <form class="form-horizontal col-10" action="/blog/post/{{blogPost.id}}/edit" method="POST">
-        <div class="form-group">
-            <div class="col-3 col-sm-12">
-                <label class="form-label" for="title">title</label>
-            </div>
-            <div class="col-9 col-sm-12">
-                <input class="form-input" type="text" name="title" value="{{blogPost.title}}" placeholder="please enter title">
-            </div>
-            <div class="col-3 col-sm-12">
-                <label class="form-label" for="content">content</label>
-            </div>
-            <div class="col-9 col-sm-12">
-                <textarea class="form-input" name="content" placeholder="write your content" rows="6">{{blogPost.content}}</textarea>
-            </div>
-        </div>
-    <button class="btn btn-primary" value="edit post">submit</button>
-    </form>
+<h1>Update blog post</h1>
+{{#if validationErrors.length}}
+<p>Errors:</p>
+<ul>
+    {{#each validationErrors}}
+    <li>{{this}}</li>
+    {{/each}}
+</ul>
 {{/if}}
-
+<form class="column col-10 col-mx-auto" action="/blog/post/{{blogPost.id}}/edit" method="POST">
+    <div class="form-group">
+        <label class="form-label" for="title">title</label>
+        <input class="form-input" type="text" name="title" value="{{blogPost.title}}" placeholder="please enter title">
+        <label class="form-label" for="content">content</label>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <textarea class="form-input" name="content" placeholder="write your content"
+            rows="6">{{blogPost.content}}</textarea>
+    </div>
+    <button class="btn btn-primary" value="edit post">submit</button>
+</form>

@@ -1,7 +1,4 @@
-<h1 class="text-center text-bold">Create portfolio project </h1>
-{{#if somethingWentWrong}}
-<p>internal error</p>
-{{else}}
+<h1>Create portfolio project </h1>
 {{#if validationErrors.length}}
 <p>Errors:</p>
 <ul>
@@ -11,17 +8,16 @@
 </ul>
 {{/if}}
 
-<div class="container">
-    <div class="columns">
-        <div class="form-group column col-mx-auto col-8">
-            <form action="/portfolio/" method="POST">
-                <label class="form-label">Title</label>
-                <input class="form-input" type="text" name="title" value="{{projectTitle}}" placeholder="enter title ">
-                <label class="form-label">content</label>
-                <textarea class="form-input" placeholder="enter content" name="content" rows="5">{{projectContent}}</textarea>
-                <button class="btn btn-primary" value="create post">submit</button>
-            </form>
+<div class="columns">
+    <form class="column col-mx-auto col-8" action="/portfolio/"  method="POST">
+        <div class="form-group">
+            <label class="form-label">Title</label>
+            <input class="form-input" type="text" name="title" value="{{projectTitle}}" placeholder="enter title ">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+            <label class="form-label">content</label>
+            <textarea class="form-input" placeholder="enter content" name="content"
+                rows="5">{{projectContent}}</textarea>
+            <button class="btn btn-primary" value="create post">submit</button>
         </div>
-    </div>
+    </form>
 </div>
-{{/if}}

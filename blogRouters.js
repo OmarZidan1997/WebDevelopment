@@ -15,81 +15,6 @@ router.get('/create-blog-post', function (request, response) {
     }
 })
 
-router.get("/page/:pageNr", function (request, response) {
-
-    var postPerPage = 4;
-    var currentPage = parseInt(request.params.pageNr)
-    var previousPage = currentPage
-    var firstPage = 1
-    var offset = postPerPage * (currentPage - firstPage)
-
-    if (currentPage > firstPage) {
-        previousPage--
-    }
-    else if (currentPage < firstPage) {
-        return response.render("error404.hbs")
-    }
-    else {
-        previousPage = 0;
-    }
-
-
-    db.getBlogPostsForEachPage(postPerPage, offset, function (blogPost, error) {
-        if (error) {
-            if (error.code == "SQLITE_MISMATCH") {
-                /******this error will occur if the user enters a very very large number  ****/
-                console.log(error)
-                response.render("error404.hbs")
-            }
-            else {
-                console.log(error)
-                response.render("error500.hbs")
-            }
-        }
-        else {
-            var nrOfPagesInBlog;
-            var nextPage = 0;
-            const page = []
-            if (blogPost.length) {
-                nrOfPagesInBlog = Math.ceil(blogPost[0].nrOfPosts / postPerPage)
-                if (currentPage <= nrOfPagesInBlog) {
-                    for (var i = 1; i <= nrOfPagesInBlog; i++) {
-                        if (i == currentPage) {
-                            page.push({ pageNr: i, isCurrentPage: true })
-                        }
-                        else {
-                            page.push({ pageNr: i, isCurrentPage: false })
-                        }
-                    }
-                    if (currentPage < nrOfPagesInBlog) {
-                        nextPage = currentPage + 1
-                    }
-                    const model = {
-                        blogPost,
-                        previousPage,
-                        nextPage,
-                        page,
-                        somethingWentWrong: false
-                    }
-                    response.render("blog.hbs", model)
-                }
-                else {
-                    /******this will happen in case if the user trying to change url to a page that doesnt exist ****/
-                    response.render("error404.hbs")
-                }
-            }
-            else {
-                /*** this will happen if there aren't posts yet in the blog where it passes a emtpy blog post that blog.hbs file will take care of.***/
-                const model = {
-                    blogPost
-                }
-                response.render("blog.hbs", model)
-            }
-        }
-
-    })
-
-})
 // Create a blog post 
 router.post("/create-blog-post", function (request, response) {
 
@@ -131,6 +56,77 @@ router.post("/create-blog-post", function (request, response) {
     else {
         response.redirect("/login")
     }
+})
+
+router.get("/page/:pageNr", function (request, response) {
+
+    var postPerPage = 4;
+    var currentPage = parseInt(request.params.pageNr)
+    var previousPage = currentPage
+    var firstPage = 1
+    var offset = postPerPage * (currentPage - firstPage)
+
+    if (currentPage > firstPage) {
+        previousPage--
+    }
+    else if (currentPage < firstPage) {
+        return response.render("error404.hbs")
+    }
+    else {
+        previousPage = 0;
+    }
+
+
+    db.getBlogPostsForEachPage(postPerPage, offset, function (blogPost, error) {
+        if (error) {
+            if (error.code == "SQLITE_MISMATCH") {
+                response.render("error404.hbs")
+            }
+            else {
+                console.log(error)
+                response.render("error500.hbs")
+            }
+        }
+        else {
+            var nrOfPagesInBlog = 1;
+            var nextPage = 0;
+            const page = []
+            if (blogPost.length) {
+                nrOfPagesInBlog = Math.ceil(blogPost[0].nrOfPosts / postPerPage)
+                for (var i = 1; i <= nrOfPagesInBlog; i++) {
+                    if (i == currentPage) {
+                        page.push({ pageNr: i, isCurrentPage: true })
+                    }
+                    else {
+                        page.push({ pageNr: i, isCurrentPage: false })
+                    }
+                }
+                if (currentPage < nrOfPagesInBlog) {
+                    nextPage = currentPage + 1
+                }
+                const model = {
+                    blogPost,
+                    previousPage,
+                    nextPage,
+                    page
+                }
+                response.render("blog.hbs", model)
+            }
+            else if (!blogPost.length && currentPage > nrOfPagesInBlog) {
+                response.render("error404.hbs")   // this will happen if user change url to blog page that doesnt exist
+            }
+            else {
+                page.push({ pageNr: firstPage, isCurrentPage: true })
+                const model = {
+                    blogPost,
+                    page
+                }
+                response.render("blog.hbs", model)
+            }
+        }
+
+    })
+
 })
 
 
@@ -317,7 +313,6 @@ router.post("/post/:id/createcomment", function (request, response) {
                     response.render("blog-post.hbs", model)
                 }
                 else {
-                    console.log(error)
                     response.render("error404.hbs")
                 }
             }
@@ -333,13 +328,18 @@ router.post("/post/:id/deletecomment/:commentId", function (request, response) {
         const commentId = parseInt(request.params.commentId)
         const blogId = parseInt(request.params.id)
 
-        db.deleteBlogPostCommentById(commentId, function (error) {
+        db.deleteBlogPostCommentById(commentId, function (error, changes) {
             if (error) {
                 console.log(error)
                 response.render("error500.hbs")
             }
             else {
-                response.redirect("/blog/post/" + blogId)
+                if (changes) {
+                    response.redirect("/blog/post/" + blogId)
+                }
+                else {
+                    response.render("error404.hbs")
+                }
             }
         })
     }

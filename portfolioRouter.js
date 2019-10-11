@@ -9,15 +9,12 @@ router.get("/", function (request, response) {
     db.getAllProjects(function (error, project) {
 
         if (error) {
-            const model = {
-                somethingWentWrong: true
-            }
-            response.render("portfolio.hbs", model)
+            console.log(error)
+            response.render("error500", model)
         }
         else {
             const model = {
-                project,
-                somethingWentWrong: false
+                project
             }
             response.render("portfolio.hbs", model)
         }
@@ -43,22 +40,16 @@ router.post('/', function (request, response) {
         if (validationErrors.length == 0) {
             db.createPortfolioProject(projectTitle, projectContent, function (error, id) {
                 if (error) {
-                    const model = {
-                        error: true,
-                        errorType: "error 500! Internal server error",
-                        errorDescription: "Couldn't create portfolio project , please contact the support"
-                    }
-                    response.render("view-errors.hbs", model)
+                    console.log(error)
+                    response.render("error500.hbs")
                 }
                 else {
-
                     response.redirect("/portfolio/project/" + id)
                 }
             })
         }
         else {
             const model = {
-                somethingWentWrong: false,
                 validationErrors,
                 projectTitle,
                 projectContent
@@ -90,19 +81,19 @@ router.get("/project/:id", function (request, response) {
     db.getPortfolioProjectById(projectId, function (error, project) {
         
         if (error) {
-            const model = {
-                error: true,
-                errorType: "error 500! Internal server error",
-                errorDescription: "Couldn't fetch data for that project in the database , please contact the support"
-            }
-            response.render("view-errors.hbs", model)
+            console.log(error)
+            response.render("error500.hbs", model)
         }
         else {
-            const model = {
-                somethingWentWrong: false,
-                project
+            if(project){
+                const model = {
+                    project
+                }
+                response.render("portfolio-project.hbs", model)
             }
-            response.render("portfolio-project.hbs", model)
+            else{
+                response.render("error404.hbs")
+            }
         }
     })
 
@@ -116,17 +107,11 @@ router.post('/project/:id/delete', function (request, response) {
         db.deleteProjectById(id, function (error) {
             
             if (error) {
-                const model = {
-                    error: true,
-                    errorType: "error 500! Internal server error",
-                    errorDescription: "Couldn't delete project something is wrong in the database , please contact the support"
-                }
-                response.render("view-errors.hbs", model)
+                console.log(error)
+                response.render("error500.hbs", model)
             }
             else {
-
                 response.redirect("/portfolio")
-
             }
         })
     }
@@ -142,16 +127,11 @@ router.get('/search-project', function (request, response) {
     const projectsToSearch = request.query.searchInput
     db.searchForProjects(projectsToSearch, function (error, project) {
         if (error) {
-            const model = {
-                error: true,
-                errorType: "error 500! Internal server error",
-                errorDescription: "Couldn't search in project, please contact the support"
-            }
-            response.render("view-errors.hbs", model)
+            console.log(error)
+            response.render("error500.hbs", model)
         }
         else {
             const model = {
-                somethingWentWrong: false,
                 project
             }
             response.render("portfolio.hbs", model)

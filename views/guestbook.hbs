@@ -1,75 +1,73 @@
-<h1 class="text-center">Guestbook</h1>
+<h1>Guestbook</h1>
 <div class="divider"></div>
-<div class="container">
-    {{#if validationErrors.length}}
-    <p>Errors:</p>
-    <ul>
-        {{#each validationErrors}}
-        <li>{{this}}</li>
-        {{/each}}
-    </ul>
-    {{/if}}
-    <div class="columns">
-        <div class="column col-8 col-mx-auto">
-            <form class="form-horizontal" action="/guestbook/" method="POST">
-                <div class="form-group">
-                    <input class="form-input" type="text" name="name" value="{{name}}" placeholder="enter name">
-                    <input class="form-input" name="message" value="{{message}}" placeholder="write message">
-                    <button class="btn btn-primary" value="edit post">submit</button>
-                </div>
-            </form>
+{{#if validationErrors.length}}
+<p>Errors:</p>
+<ul>
+    {{#each validationErrors}}
+    <li>{{this}}</li>
+    {{/each}}
+</ul>
+{{/if}}
+<div class="columns">
+    <form class="column col-8 col-mx-auto" action="/guestbook/" method="POST">
+        <div class="form-group">
+            <input class="form-input" type="text" name="name" value="{{name}}" placeholder="enter name">
+            <input class="form-input" name="message" value="{{message}}" placeholder="write message">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+            <button class="btn btn-primary" value="edit post">submit</button>
         </div>
-    </div>
-    <div class="divider"></div>
-    <div class="columns">
-        <div class="column col-12">
-            <div class="panel bg-dark">
-                <div class="panel-header text-center">
-                    <div class="panel-title">Comments</div>
-                </div>
-                <div class="panel-body">
-                    {{#if guestbook}}
-                    {{#each guestbook}}
-                    <div class="divider"></div>
-                    <div class="tile">
-                        <div class="tile-content my-1">
-                            <p class="tile-title text-bold text-break"> name: {{name}}</p>
-                            <p class="tile-subtitle text-bold text-break"> comment: {{comment}}</p>
-                            {{#if reply}}
-                            <p class="tile-subtitle text-bold text-break"> Admin's answer : {{reply}}</p>
-                            {{else}}
-                            <p class="tile-subtitle text-bold text-break"> Admin's answer : No answer yet!</p>
-                            {{/if}}
+    </form>
+</div>
+<div class="divider"></div>
+<div class="columns">
+    <div class="column col-12">
+        <div class="panel bg-dark">
+            <div class="panel-header text-center">
+                <div class="panel-title">Comments</div>
+            </div>
+            <div class="panel-body">
+                {{#if guestbook}}
+                {{#each guestbook}}
+                <div class="divider"></div>
+                <div class="tile">
+                    <div class="tile-content my-1">
+                        <p class="tile-title text-bold text-break"> name: {{name}}</p>
+                        <p class="tile-subtitle text-bold text-break"> comment: {{comment}}</p>
+                        {{#if reply}}
+                        <p class="tile-subtitle text-bold text-break"> Admin's answer : {{reply}}</p>
+                        {{else}}
+                        <p class="tile-subtitle text-bold text-break"> Admin's answer : No answer yet!</p>
+                        {{/if}}
 
-                            {{#if ../isLoggedIn}}
-                            <form class="d-inline-block" action="/guestbook/comment/{{id}}/delete" method="POST">
-                                <button class="btn btn-primary">Delete comment</button>
-                            </form>
-                            {{#unless reply}}
-                            <form class="d-inline-block" action="/guestbook/comment/{{id}}/reply" method="GET">
-                                <button class="btn btn-primary">Reply Comment</button>
-                            </form>
-                            {{else}}
-                            <form action="/guestbook/deleteReplyComment/{{replyId}}" class="d-inline-block"
-                                method="POST">
-                                <button class="btn btn-primary">Delete Reply</button>
-                            </form>
-                            <form action="/guestbook/comment/{{id}}/editReply" class="d-inline-block" method="GET">
-                                <button class="btn btn-primary">Edit Reply</button>
-                            </form>
-                            {{/unless}}
-                            {{/if}}
-                        </div>
+                        {{#if ../isLoggedIn}}
+                        <form class="d-inline-block" action="/guestbook/comment/{{id}}/delete" method="POST">
+                            <input type="hidden" name="_csrf" value="{{../csrfToken}}">
+                            <button class="btn btn-primary">Delete comment</button>
+                        </form>
+                        {{#unless reply}}
+                        <form class="d-inline-block" action="/guestbook/comment/{{id}}/reply" method="GET">
+                            <button class="btn btn-primary">Reply Comment</button>
+                        </form>
+                        {{else}}
+                        <form action="/guestbook/deleteReplyComment/{{replyId}}" class="d-inline-block" method="POST">
+                            <input type="hidden" name="_csrf" value="{{../csrfToken}}">
+                            <button class="btn btn-primary">Delete Reply</button>
+                        </form>
+                        <form action="/guestbook/comment/{{id}}/editReply" class="d-inline-block" method="GET">
+                            <button class="btn btn-primary">Edit Reply</button>
+                        </form>
+                        {{/unless}}
+                        {{/if}}
                     </div>
-                    {{/each}}
-                    {{else}}
-                    <div class="tile">
-                        <div class="tile-content">
-                            <p class="tile-title text-bold text-break">No comments yet</p>
-                        </div>
-                    </div>
-                    {{/if}}
                 </div>
+                {{/each}}
+                {{else}}
+                <div class="tile">
+                    <div class="tile-content">
+                        <p class="tile-title text-bold text-break">No comments yet</p>
+                    </div>
+                </div>
+                {{/if}}
             </div>
         </div>
     </div>
