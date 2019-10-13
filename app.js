@@ -55,7 +55,7 @@ app.use(express.static('public'));
 
 
 app.get('/', function (request, response) {
-    response.render("home.hbs", { title: "Home Page" })
+    response.render("home.hbs")
 })
 
 
@@ -78,14 +78,14 @@ app.use("/portfolio", portfolioRouter)
 
 
 app.get('/about', function (request, response) {
-    response.render("about.hbs", { title: "About Page" })
+    response.render("about.hbs")
 })
 
 
 
 
 app.get('/contact', function (request, response) {
-    response.render("contact.hbs", { title: "Contact Page" })
+    response.render("contact.hbs")
 })
 
 app.get('/login', function (request, response) {

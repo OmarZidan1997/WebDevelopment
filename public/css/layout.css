@@ -59,6 +59,12 @@ footer{
     width: 100%;
 }
 
+#contactlist{
+    list-style-type: none;
+    text-align: center;
+    margin: 50px;
+}
+
 @media screen and (max-width: 600px) {
     .pagination{
         display: block;
