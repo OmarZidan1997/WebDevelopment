@@ -19,9 +19,9 @@ db.run(`
 		commentid INTEGER PRIMARY KEY,
 		name TEXT,
 		comment TEXT,
-        blogId INTEGER,
-        CONSTRAINT blogId
-            FOREIGN KEY (blogId) REFERENCES blogPost(id)
+        blogPostid INTEGER,
+        CONSTRAINT blogPostid
+            FOREIGN KEY (blogPostid) REFERENCES blogPost(id)
             ON DELETE CASCADE
 	)
 `)
@@ -69,7 +69,7 @@ exports.getBlogPostAndCommentsById = function (id, callback) {
     SELECT bp.id,bp.title,bp.content,bpc.commentid,bpc.name,bpc.comment
     FROM blogPost as bp
     LEFT JOIN blogPostComment as bpc 
-    ON bpc.blogId = bp.id
+    ON bpc.blogPostid = bp.id
     WHERE bp.id = ?
     `
 
@@ -104,7 +104,7 @@ exports.deleteBlogPostById = function (id, callback) {
 
 exports.createBlogPostComment = function (name, comment, blogId, callback) {
 
-    const query = "INSERT INTO blogPostComment (name,comment,blogId) VALUES (?,?,?)"
+    const query = "INSERT INTO blogPostComment (name,comment,blogPostid) VALUES (?,?,?)"
     const values = [name, comment, blogId]
 
     db.run(query, values, function (error) {
@@ -124,7 +124,7 @@ exports.deleteBlogPostCommentById = function (commentId, callback) {
 
 
 
-/*---------- Guestbooks-------------------------*/
+/*-------------Guestbook-------------------------*/
 /*--------------------------------------------- */
 
 
@@ -142,11 +142,11 @@ db.run(`
 /*--------- guestbookReplies-------*/
 db.run(`
 	CREATE TABLE IF NOT EXISTS guestbookReply (
-		replyId INTEGER PRIMARY KEY,
+		replyid INTEGER PRIMARY KEY,
         reply TEXT,
-        guestbookId INTEGER,
-        CONSTRAINT guestbookId
-            FOREIGN KEY (guestbookId) REFERENCES guestbook(id)
+        guestbookid INTEGER,
+        CONSTRAINT guestbookid
+            FOREIGN KEY (guestbookid) REFERENCES guestbook(id)
             ON DELETE CASCADE
 	)
 `)
@@ -175,10 +175,10 @@ exports.getGuestbookCommentById = function (id, callback) {
 exports.getAllGuestbookComments = function (callback) {
 
     const query = `
-    SELECT gb.id,gb.name,gb.comment,gbr.replyId,gbr.reply
+    SELECT gb.id,gb.name,gb.comment,gbr.replyid,gbr.reply
     FROM guestbook as gb
     LEFT JOIN guestbookReply as gbr 
-    ON gbr.guestbookId = gb.id
+    ON gbr.guestbookid = gb.id
     `
 
     db.all(query, function (error, guestbook) {
@@ -197,7 +197,7 @@ exports.deleteCommentFromGuestbook = function (id, callback) {
 
 exports.createGuestbookReply = function (commentId, reply, callback) {
 
-    const query = `INSERT INTO guestbookReply(reply,guestbookId) VALUES(?,?)`
+    const query = `INSERT INTO guestbookReply(reply,guestbookid) VALUES(?,?)`
     const values = [reply, commentId];
     db.run(query, values, function (error) {
         callback(error)
@@ -205,7 +205,7 @@ exports.createGuestbookReply = function (commentId, reply, callback) {
 }
 
 exports.updateGuestbookReply = function (newReply, id, callback) {
-    const query = "UPDATE guestbookReply SET reply = ? WHERE guestbookId = ?"
+    const query = "UPDATE guestbookReply SET reply = ? WHERE guestbookid = ?"
     const values = [newReply, id]
     db.run(query, values, function (error) {
         const changes = this.changes
@@ -218,7 +218,7 @@ exports.getGuestbookReplyById = function (id, callback) {
     const query = `
     SELECT reply
     FROM guestbookReply 
-    WHERE guestbookId = ?`
+    WHERE guestbookid = ?`
     const values = [id]
 
     db.get(query, values, function (error, reply) {
@@ -227,7 +227,7 @@ exports.getGuestbookReplyById = function (id, callback) {
 }
 exports.deleteGuestbookReplyById = function (id, callback) {
 
-    const query = `DELETE FROM  guestbookReply WHERE replyId = ?`
+    const query = `DELETE FROM guestbookReply WHERE replyid = ?`
     const values = [id];
     db.run(query, values, function (error) {
         callback(error)
