@@ -19,8 +19,9 @@
     </div>
 </div>
 <div class="columns">
-    {{#if project}}
-    {{#each project}}
+    {{#unless searchValue}}
+    {{#if projects}}
+    {{#each projects}}
     <div class="column col-6 col-sm-12">
         <div class="card">
             <div class="card-header">
@@ -47,9 +48,50 @@
     <div class="column col-6 col-sm-12">
         <div class="card">
             <div class="card-header">
-                <div class="card-title h5 text-dark text-center">No projects found</div>
+                <div class="card-title h5 text-dark text-center">No projects yet!</div>
             </div>
         </div>
     </div>
     {{/if}}
+    {{else}}
+    <div class="column col-12">
+        <span class="chip">
+            search value = {{searchValue}}
+            <a href="/portfolio" class="btn btn-clear bg-primary" aria-label="Close" role="button"></a>
+        </span>
+    </div>
+    {{#if projects}}
+    {{#each projects}}
+    <div class="column col-6 col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title h5 text-dark text-center">{{title}}</div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="card-body p-centered">
+                <form class="d-inline-block" action="/portfolio/project/{{id}}" method="GET">
+                    <button class="btn btn-primary p-centered">visit</button>
+                </form>
+                {{#if ../isLoggedIn}}
+                <form class="d-inline-block" action="/portfolio/project/{{id}}/delete" method="POST">
+                    <input type="hidden" name="_csrf" value="{{../csrfToken}}">
+                    <button class="btn btn-primary p-centered">delete</button>
+                </form>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+    {{/each}}
+    {{else}}
+    <div class="column col-6 col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title h5 text-dark text-center">No projects found with this search result!</div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+    {{/unless}}
 </div>

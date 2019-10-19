@@ -1,20 +1,19 @@
-const express = require('express')
-const db = require('./db')
+const express = require("express")
+const db = require("./db")
 
 const router = express.Router()
 
 
 // get all guestbook comments
-router.get('/', function (request, response) {
+router.get("/", function (request, response) {
 
-    db.getAllGuestbookComments(function (error, guestbook) {
+    db.getAllGuestbookComments(function (error, guestbookComments) {
 
         if (error) {
             response.render("error500.hbs")
         } else {
             const model = {
-                guestbook: guestbook,
-                somethingWentWrong: false
+                guestbookComments
             }
             response.render("guestbook.hbs", model)
         }
@@ -22,7 +21,7 @@ router.get('/', function (request, response) {
 })
 
 // create guestbook comment
-router.post('/', function (request, response) {
+router.post("/", function (request, response) {
 
     const name = request.body.name
     const message = request.body.message
@@ -32,7 +31,7 @@ router.post('/', function (request, response) {
     }
 
     if (message == null || message.trim() == "") {
-        validationErrors.push("Must Enter content")
+        validationErrors.push("Must enter content")
     }
 
     if (validationErrors.length == 0) {
@@ -47,12 +46,12 @@ router.post('/', function (request, response) {
         })
     }
     else {
-        db.getAllGuestbookComments(function (error, guestbook) {
+        db.getAllGuestbookComments(function (error, guestbookComments) {
             if (error) {
                 response.render("error500.hbs")
             } else {
                 const model = {
-                    guestbook: guestbook,
+                    guestbookComments,
                     validationErrors,
                     name,
                     message
@@ -154,8 +153,8 @@ router.post("/comment/:id/reply", function (request, response) {
 router.get("/comment/:id/editReply", function (request, response) {
 
     if (request.session.isLoggedIn) {
-        const guestbookId = parseInt(request.params.id);
-        db.getGuestbookReplyById(guestbookId, function (error, reply) {
+        const guestbookCommentId = parseInt(request.params.id);
+        db.getGuestbookReplyByCommentId(guestbookCommentId, function (error, reply) {
             if (error) {
                 console.log(error)
                 response.render("error500.hbs")
@@ -163,8 +162,7 @@ router.get("/comment/:id/editReply", function (request, response) {
             else {
                 if (reply) {
                     const model = {
-                        somethingWentWrong: false,
-                        guestbookId,
+                        guestbookCommentId,
                         reply
                     }
                     response.render("edit-guestbook-reply.hbs", model)
@@ -184,7 +182,7 @@ router.get("/comment/:id/editReply", function (request, response) {
 router.post("/comment/:id/editReply", function (request, response) {
 
     if (request.session.isLoggedIn) {
-        const id = parseInt(request.params.id)
+        const guestbookCommentId = parseInt(request.params.id)
         const newReply = request.body.reply
         const validationErrors = []
 
@@ -194,7 +192,7 @@ router.post("/comment/:id/editReply", function (request, response) {
 
         if (validationErrors.length == 0) {
 
-            db.updateGuestbookReply(newReply, id, function (error, changes) {
+            db.updateGuestbookReply(newReply, guestbookCommentId, function (error, changes) {
                 if (error) {
                     console.log(error)
                     response.render("error500.hbs")
@@ -209,7 +207,7 @@ router.post("/comment/:id/editReply", function (request, response) {
             })
         }
         else {
-            db.getGuestbookReplyById(id, function (error, reply) {
+            db.getGuestbookReplyByCommentId(guestbookCommentId, function (error, reply) {
                 if (error) {
                     console.log(error)
                     response.render("view-errors.hbs", model)
@@ -217,9 +215,8 @@ router.post("/comment/:id/editReply", function (request, response) {
                 else {
                     if (reply) {
                         const model = {
-                            somethingWentWrong: false,
                             validationErrors,
-                            guestbookId: id,
+                            guestbookCommentId: guestbookCommentId,
                             reply
                         }
                         response.render("edit-guestbook-reply.hbs", model)
@@ -233,7 +230,7 @@ router.post("/comment/:id/editReply", function (request, response) {
     }
 })
 
-router.post("/deleteReplyComment/:replyId", function (request, response) {
+router.post("/deleteReply/:replyId", function (request, response) {
 
     if (request.session.isLoggedIn) {
         const replyId = parseInt(request.params.replyId)
@@ -259,9 +256,9 @@ router.post("/deleteReplyComment/:replyId", function (request, response) {
 router.post("/comment/:id/delete", function (request, response) {
 
     if (request.session.isLoggedIn) {
-        const id = parseInt(request.params.id)
+        const guestbookCommentId = parseInt(request.params.id)
 
-        db.deleteCommentFromGuestbook(id, function (error) {
+        db.deleteCommentFromGuestbook(guestbookCommentId, function (error) {
             if (error) {
                 console.log(error)
                 response.render("error500.hbs", model)

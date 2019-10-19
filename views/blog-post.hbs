@@ -3,18 +3,18 @@
     <div class="column col-12">
         <h1 class="text-break">{{blogPost.0.title}}</h1>
         <p class="text-break">{{blogPost.0.content}}</p>
-        {{#if validationErrors.length}}
-        <p>Errors:</p>
-        <ul>
-            {{#each validationErrors}}
-            <li>{{this}}</li>
-            {{/each}}
-        </ul>
-        {{/if}}
     </div>
 </div>
 <div class="divider p-2"></div>
 <div class="columns">
+    {{#if validationErrors.length}}
+    <p>Errors:</p>
+    <ul>
+        {{#each validationErrors}}
+        <li>{{this}}</li>
+        {{/each}}
+    </ul>
+    {{/if}}
     <div class="column col-6 col-xs-12">
         <form action="/blog/post/{{blogPost.0.id}}/createcomment" method="POST">
             <div class="form-group">
@@ -42,7 +42,7 @@
                         <p class="tile-title text-bold text-break">name: {{name}}</p>
                         <p class="tile-subtitle text-break"> comment: {{comment}}</p>
                         {{#if ../isLoggedIn}}
-                        <form action="/blog/post/{{id}}/deletecomment/{{commentid}}" method="POST">
+                        <form action="/blog/post/{{id}}/deletecomment/{{commentId}}" method="POST">
                             <input type="hidden" name="_csrf" value="{{../csrfToken}}">
                             <button class="btn btn-primary">Delete</button>
                         </form>

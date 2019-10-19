@@ -1,11 +1,11 @@
-const express = require('express')
-const db = require('./db')
+const express = require("express")
+const db = require("./db")
 
 const router = express.Router()
 
 // Get all posts
 
-router.get('/create-blog-post', function (request, response) {
+router.get("/create-blog-post", function (request, response) {
 
     if (request.session.isLoggedIn) {
         response.render("create-blog-post.hbs")
@@ -28,7 +28,7 @@ router.post("/create-blog-post", function (request, response) {
         }
 
         if (content == null || content.trim() == "") {
-            validationErrors.push("Must Enter content")
+            validationErrors.push("Must enter content")
         }
 
         if (validationErrors.length == 0) {
@@ -77,7 +77,7 @@ router.get("/page/:pageNr", function (request, response) {
     }
 
 
-    db.getBlogPostsForEachPage(postPerPage, offset, function (blogPost, error) {
+    db.getBlogPostsForEachPage(postPerPage, offset, function (blogPosts, error) {
         if (error) {
             if (error.code == "SQLITE_MISMATCH") {
                 response.render("error404.hbs")
@@ -91,8 +91,8 @@ router.get("/page/:pageNr", function (request, response) {
             var nrOfPagesInBlog = 1;
             var nextPage = 0;
             const page = []
-            if (blogPost.length) {
-                nrOfPagesInBlog = Math.ceil(blogPost[0].nrOfPosts / postPerPage)
+            if (blogPosts.length) {
+                nrOfPagesInBlog = Math.ceil(blogPosts[0].nrOfPosts / postPerPage)
                 for (var i = 1; i <= nrOfPagesInBlog; i++) {
                     if (i == currentPage) {
                         page.push({ pageNr: i, isCurrentPage: true })
@@ -105,20 +105,20 @@ router.get("/page/:pageNr", function (request, response) {
                     nextPage = currentPage + 1
                 }
                 const model = {
-                    blogPost,
+                    blogPosts,
                     previousPage,
                     nextPage,
                     page
                 }
                 response.render("blog.hbs", model)
             }
-            else if (!blogPost.length && currentPage > nrOfPagesInBlog) {
+            else if (!blogPosts.length && currentPage > nrOfPagesInBlog) {
                 response.render("error404.hbs")   // this will happen if user change url to blog page that doesnt exist
             }
             else {
                 page.push({ pageNr: firstPage, isCurrentPage: true })
                 const model = {
-                    blogPost,
+                    blogPosts,
                     page
                 }
                 response.render("blog.hbs", model)
@@ -217,7 +217,7 @@ router.post("/post/:id/edit", function (request, response) {
             validationErrors.push("Must enter title")
         }
         if (blogPostContent == null || blogPostContent.trim() == "") {
-            validationErrors.push("Must Enter content")
+            validationErrors.push("Must enter content")
         }
 
         if (validationErrors.length == 0) {

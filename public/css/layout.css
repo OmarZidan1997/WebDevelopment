@@ -59,6 +59,12 @@ footer{
     width: 100%;
 }
 
+.pagination .page-item a{
+    color: whitesmoke;
+}
+.chip{
+    background: #5755d9;
+}
 #contactlist{
     list-style-type: none;
     text-align: center;

@@ -1,14 +1,13 @@
-const express = require('express')
-const expressHandlebars = require('express-handlebars')
-const bodyParser = require('body-parser')
-const blogRouter = require('./blogRouters')
-const guestbookRouter = require('./guestbookRouter')
-const portfolioRouter = require('./portfolioRouter')
+const express = require("express")
+const expressHandlebars = require("express-handlebars")
+const bodyParser = require("body-parser")
+const blogRouter = require("./blogRouters")
+const guestbookRouter = require("./guestbookRouter")
+const portfolioRouter = require("./portfolioRouter")
 const expressSession = require("express-session")
-const SQLiteStore = require('connect-sqlite3')(expressSession)
-var bcrypt = require('bcryptjs')
-var csrf = require('csurf')
-const db = require('./db')
+const SQLiteStore = require("connect-sqlite3")(expressSession)
+var bcrypt = require("bcryptjs")
+var csrf = require("csurf")
 
 
 
@@ -17,15 +16,16 @@ const app = express()
 const usernameOfAdmin = "admin"
 var passwordOfAdmin
 
+//hashes the admin's password
 bcrypt.genSalt(10, function (error, salt) {
-    bcrypt.hash("AdMin123", salt, function (error, hash) {
+    bcrypt.hash("admin123", salt, function (error, hash) {
         passwordOfAdmin = hash
     })
 })
 
 
 app.use(expressSession({
-    secret: 'What Comes Around Goes Around',
+    secret: "What Comes Around Goes Around",
     resave: false,
     saveUninitialized: false,
     store: new SQLiteStore()
@@ -51,10 +51,10 @@ app.engine("hbs", expressHandlebars({
     defaultLayout: "main.hbs",
 }))
 
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 
-app.get('/', function (request, response) {
+app.get("/", function (request, response) {
     response.render("home.hbs")
 })
 
@@ -77,18 +77,18 @@ app.use("/portfolio", portfolioRouter)
 
 
 
-app.get('/about', function (request, response) {
+app.get("/about", function (request, response) {
     response.render("about.hbs")
 })
 
 
 
 
-app.get('/contact', function (request, response) {
+app.get("/contact", function (request, response) {
     response.render("contact.hbs")
 })
 
-app.get('/login', function (request, response) {
+app.get("/login", function (request, response) {
     if (!request.session.isLoggedIn) {
         response.render("login.hbs")
     }
@@ -97,7 +97,7 @@ app.get('/login', function (request, response) {
     }
 
 })
-app.post('/login', function (request, response) {
+app.post("/login", function (request, response) {
     if (!request.session.isLoggedIn) {
 
         const usernameEntered = request.body.username
@@ -162,7 +162,7 @@ app.post('/login', function (request, response) {
     }
 })
 
-app.get('/logout', function (request, response) {
+app.get("/logout", function (request, response) {
     if (request.session.isLoggedIn) {
         // delete session object
         request.session.destroy(function (error) {
@@ -183,7 +183,7 @@ app.get('/logout', function (request, response) {
     }
 })
 
-// this will view page not found if user try to cange the url that didnt match wih the routers.
+// this will view page not found if user try to cange the uri that didnt match wih any resources in the server.
 app.get("/*", function (request, response) {
     response.render("error404.hbs")
 })

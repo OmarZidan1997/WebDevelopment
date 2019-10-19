@@ -1,12 +1,12 @@
-const express = require('express')
-const db = require('./db')
+const express = require("express")
+const db = require("./db")
 
 const router = express.Router()
 
 
 router.get("/", function (request, response) {
 
-    db.getAllProjects(function (error, project) {
+    db.getAllProjectsInPortfolio(function (error, projects) {
 
         if (error) {
             console.log(error)
@@ -14,7 +14,8 @@ router.get("/", function (request, response) {
         }
         else {
             const model = {
-                project
+                projects,
+                searchValue: false
             }
             response.render("portfolio.hbs", model)
         }
@@ -22,7 +23,7 @@ router.get("/", function (request, response) {
 })
 
 //** create project**//
-router.post('/', function (request, response) {
+router.post("/", function (request, response) {
 
     if (request.session.isLoggedIn) {
         const projectTitle = request.body.title
@@ -34,7 +35,7 @@ router.post('/', function (request, response) {
         }
 
         if (projectContent == null || projectContent.trim() == "") {
-            validationErrors.push("Must Enter content")
+            validationErrors.push("Must enter content")
         }
 
         if (validationErrors.length == 0) {
@@ -63,7 +64,7 @@ router.post('/', function (request, response) {
 })
 
 
-router.get('/create-project', function (request, response) {
+router.get("/create-project", function (request, response) {
 
     if (request.session.isLoggedIn) {
         response.render("create-portfolio-project.hbs")
@@ -99,12 +100,12 @@ router.get("/project/:id", function (request, response) {
 
 })
 
-router.post('/project/:id/delete', function (request, response) {
+router.post("/project/:id/delete", function (request, response) {
     
     if (request.session.isLoggedIn) {
 
-        const id = parseInt(request.params.id)
-        db.deleteProjectById(id, function (error) {
+        const projectId = parseInt(request.params.id)
+        db.deleteProjectById(projectId, function (error) {
             
             if (error) {
                 console.log(error)
@@ -122,21 +123,22 @@ router.post('/project/:id/delete', function (request, response) {
 })
 
 
-router.get('/search-project', function (request, response) {
+router.get("/search-project", function (request, response) {
 
     const projectsToSearch = request.query.searchInput
-    db.searchForProjects(projectsToSearch, function (error, project) {
+    db.searchForProjects(projectsToSearch, function (error, projects) {
         if (error) {
             console.log(error)
             response.render("error500.hbs", model)
         }
         else {
             const model = {
-                project
+                projects,
+                searchValue: projectsToSearch
             }
             response.render("portfolio.hbs", model)
         }
     })
 })
 
-module.exports = router
+module.exports = router 
